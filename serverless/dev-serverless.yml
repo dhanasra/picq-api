@@ -46,6 +46,10 @@ functions:
     handler: ./handlers/auth.handler
     events:
       - http:
+          path: /ping
+          method: GET
+          cors: true
+      - http:
           path: /signup
           method: POST
           cors: true
