@@ -1,0 +1,29 @@
+name: PicQ API - Dev
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  deploy-lambda:
+    runs-on: ubuntu-latest
+    environment: 
+      name: dev
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      # - run: aws s3 cp s3://clans-environment/dev/config.dev.json config/
+      - run: npm cache clean --force
+      - run: sudo npm install -g n
+      - run: sudo n 18.17.0
+      - run: npm i -g serverless@3.38.0
+      - run: npm i
+      - run: cp ./serverless/dev-serverless.yml serverless.yml
+      - run: ls
+      - run: serverless package
+      - run: ls
+      - run: serverless deploy --stage dev --region ${{ secrets.AWS_DEFAULT_REGION }}

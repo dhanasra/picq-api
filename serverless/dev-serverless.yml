@@ -1,0 +1,55 @@
+service: picq-backend
+
+plugins:
+  - serverless-prune-plugin
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  timeout: 30
+  stage: dev
+  environment:
+    STAGE: ${self:custom.currentStage}
+    ORIGIN_WHITELIST: http://localhost:4000,http://localhost:5000
+    MONGO_DB_URL: mongodb+srv://spiderlingz:admin@serverlessinstance0.txwq8bv.mongodb.net/picq_dev?retryWrites=true&w=majority
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:*"
+      Resource:
+        Fn::Join:
+          - ""
+          - - "arn:aws:s3:::"
+            - "picq"
+            - "/*"
+
+custom:
+  prune:
+    automatic: true
+    number: 1
+  serverless-offline:
+    httpPort: 4000
+  defaultStage: dev
+  currentStage: ${opt:stage, self:custom.defaultStage}
+
+  # you can overwrite defaults here
+  stage: ${self:custom.currentStage}
+
+package:
+  exclude:
+    - "venv/**"
+
+functions:
+  auth:
+    handler: ./handlers/auth.handler
+    events:
+      - http:
+          path: /signup
+          method: POST
+          cors: true
+      - http:
+          path: /signin
+          method: POST
+          cors: true
