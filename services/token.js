@@ -14,7 +14,6 @@ function generateTokens({ userID, roleID }) {
   return { accessToken, refreshToken };
 }
 
-
 function verifyToken(token) {
   try {
     const decoded = JWT.verify(token, accessTokenSecret);
