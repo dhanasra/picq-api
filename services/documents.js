@@ -49,6 +49,7 @@ async function create(req, res) {
 async function update(req, res) {
     try {
         const { documentID } = req.params;
+        console.log(req.body);
         const { identityType, bankInfo, panNumber, gstin } = req.body;
         const document = await depManager.DOCUMENTS.getDocumentsModel().findById(documentID);
 
