@@ -20,8 +20,8 @@ app.use(cors_origin());
 
 app.use(validateAccessToken);
 
-app.post("/document", upload, processHandler(service.create));
-app.put("/document/:documentID", upload, processHandler(service.update));
+app.post("/documents", upload, processHandler(service.create));
+app.put("/documents/:documentID", upload, processHandler(service.update));
 
 module.exports.handler = serverless(app, {
     callbackWaitsForEmptyEventLoop: false
