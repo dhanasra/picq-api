@@ -106,7 +106,7 @@ async function onboarding(req, res){
       return responser.error(res, null, "AUTH_E003");
     }
     
-    const { studioName, address, frontDeskPhone, minTime, category, services, price, offer, images, about, tc, equipments, facilities, products, status } = req.body;
+    const { studioName, email, documents, ownerPhoneNumber, ownerEmail, ownerType, address, frontDeskPhone, minTime, category, services, price, offer, images, about, tc, equipments, facilities, products, status } = req.body;
 
     const studio = await depManager.STUDIO.getStudioModel().findOne({ owner: userID });
 
@@ -155,6 +155,21 @@ async function onboarding(req, res){
     }
     if(products){
       studio.products = products;
+    }
+    if(ownerType){
+      studio.ownerType = ownerType;
+    }
+    if(email){
+      studio.email = email;
+    }
+    if(ownerEmail){
+      studio.ownerEmail = ownerEmail;
+    }
+    if(ownerPhoneNumber){
+      studio.ownerPhoneNumber = ownerPhoneNumber;
+    }
+    if(documents){
+      studio.documents = documents;
     }
 
     if(status === "completed"){

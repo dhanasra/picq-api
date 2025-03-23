@@ -7,9 +7,7 @@ async function uploadBatch(req, res) {
 
     const images = req?.files?.images;
     let uploaded = [];
-    console.log(images)
     if (Array.isArray(images)) {
-      console.log("array")
       uploaded = await Promise.all(
         images.map(async (pictureFile) => {
           return await uploadFile(`${userID}/picture/`, pictureFile);

@@ -99,3 +99,14 @@ functions:
           path: /upload/batch
           method: POST
           cors: true
+  documents:
+    handler: ./handlers/documents.handler
+    events:
+      - http:
+          path: /documents
+          method: POST
+          cors: true
+      - http:
+          path: /documents/{documentID}
+          method: PUT
+          cors: true

@@ -10,6 +10,10 @@ const studioSchema = new Schema({
     minlength: [2, 'Studio name must be at least 2 characters long'],
     maxlength: [50, 'Studio name cannot exceed 50 characters'],
   },
+  ownerType: {
+    type: String,
+    default: null
+  },
   frontDeskPhone: {
     type: String,
     default: null
