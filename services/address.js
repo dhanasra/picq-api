@@ -19,9 +19,10 @@ async function create(req, res){
             createdAt: Date.now()   
         })
 
-        return responser.success(res, address, "TOKEN_S001");
+        return responser.success(res, address, "ADDRESS_S001");
     }catch(e){
-        return responser.error(res, null, "TOKEN_S001");
+        console.log(e);
+        return responser.error(res, "GLOBAL_E001");
     }
 }
 
@@ -59,9 +60,10 @@ async function update(req, res){
         
         await address.save();
 
-        return responser.success(res, address, "TOKEN_S001");
+        return responser.success(res, address, "ADDRESS_S001");
     }catch(e){
-        return responser.error(res, null, "TOKEN_S001");
+        console.log(e);
+        return responser.error(res, "GLOBAL_E001");
     }
 }
 
@@ -71,9 +73,10 @@ async function get(req, res){
 
         const address = await depManager.ADDRESS.getAddressModel().findById({ addressID });
 
-        return responser.success(res, address, "TOKEN_S001");
+        return responser.success(res, address, "ADDRESS_S001");
     }catch(e){
-        return responser.error(res, null, "TOKEN_S001");
+        console.log(e);
+        return responser.error(res, "GLOBAL_E001");
     }
 }
 
@@ -83,9 +86,10 @@ async function clear(req, res){
 
         await depManager.ADDRESS.getAddressModel().deleteOne({_id: addressID });
 
-        return responser.success(res, true, "TOKEN_S001");
+        return responser.success(res, true, "ADDRESS_S001");
     }catch(e){
-        return responser.error(res, null, "TOKEN_S001");
+        console.log(e);
+        return responser.error(res, "GLOBAL_E001");
     }
 }
 

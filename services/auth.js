@@ -19,13 +19,13 @@ async function signin(req, res){
     ).lean();
 
     if (!user) {
-      return responser.error(res, null, "AUTH_E002");
+      return responser.error(res, "AUTH_E001");
     }
 
     const isPasswordValid = await checkHash(password, user.password.hashed);
 
     if (!isPasswordValid) {
-      return responser.error(res, null, "AUTH_E001");
+      return responser.error(res, "AUTH_E002");
     }
 
     const displayName = `${user.firstName} ${user.lastName}`;
@@ -37,7 +37,7 @@ async function signin(req, res){
 
     return responser.success(res, { accessToken, displayName, roleID: user.roleID }, "AUTH_S001");
   }catch(e){
-    return responser.error(res, null, "R001");
+    return responser.error(res, "GLOBAL_E001");
   }
 }
 
@@ -46,6 +46,14 @@ async function signup(req, res){
   try{
     
     const { firstName, lastName, emailAddress, phoneNumber, password } = req.body;
+
+    const existingUser = await depManager.USER.getUserModel().findOne({
+      $or: [{ emailAddress }, { phoneNumber }]
+    });
+
+    if (existingUser) {
+      return responser.error(res, "AUTH_E003");
+    }
 
     const data = { 
       firstName,
@@ -80,9 +88,10 @@ async function signup(req, res){
       roleID: user.roleID
     });
 
-    return responser.success(res, { accessToken, displayName, roleID: user.roleID }, "AUTH_S001");
+    return responser.success(res, { accessToken, displayName, roleID: user.roleID }, "AUTH_S002");
   }catch(e){
-    return responser.error(res, null, "R001");
+    console.log(e);
+    return responser.error(res, "GLOBAL_E001");
   }
 }
 
@@ -157,9 +166,10 @@ async function onboarding(req, res){
 
     await studio.save();
 
-    return responser.success(res, studio, "AUTH_S001");
+    return responser.success(res, studio, "AUTH_S003");
   }catch(e){
-    return responser.error(res, null, "R001");
+    console.log(e);
+    return responser.error(res, "GLOBAL_E001");
   }
 }
 

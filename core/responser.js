@@ -169,12 +169,16 @@ module.exports.globalErrorHandler = (req, res, err) => {
  */
 
 const generateResponse = (code) => {
+
   if (typeof code != 'string') return null;
   const codeParts = code.split("_");
+
   if (codeParts.length != 2) return null;
+
   const handler = codeParts[0];
   const codekey = codeParts[1];
   const en = "en";
+
   try {
     const msg = messageCode[handler][en][codekey];
     return msg;
@@ -184,6 +188,7 @@ const generateResponse = (code) => {
 }
 
 module.exports.success = (res, data, messageCode) => {
+
   const msg = generateResponse(messageCode);
 
   res.status(200).send({
@@ -195,8 +200,9 @@ module.exports.success = (res, data, messageCode) => {
 }
 
 module.exports.error = (res, errorCode, status = 400) => {
-  console.log(errorCode);
+
   status = isStatusCode(status) ? status : 400;
+
   const msg = generateResponse(errorCode);
 
   res.status(status).send({

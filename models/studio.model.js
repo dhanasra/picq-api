@@ -59,7 +59,7 @@ const studioSchema = new Schema({
     default: null,
     validate: {
       validator: function (v) {
-        return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v); // Basic email validation
+        return v === null || /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v); // Basic email validation
       },
       message: (props) => `${props.value} is not a valid email!`
     }
@@ -69,7 +69,7 @@ const studioSchema = new Schema({
     default: null,
     validate: {
       validator: function (v) {
-        return /^[0-9]{10}$/.test(v); // 10-digit phone number validation
+        return v === null || /^[0-9]{10}$/.test(v); // 10-digit phone number validation
       },
       message: (props) => `${props.value} is not a valid phone number!`
     }
@@ -79,7 +79,7 @@ const studioSchema = new Schema({
     default: null,
     validate: {
       validator: function (v) {
-        return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v); // Basic email validation
+        return v === null || /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v); // Basic email validation
       },
       message: (props) => `${props.value} is not a valid email!`
     }
@@ -89,7 +89,7 @@ const studioSchema = new Schema({
     default: null,
     validate: {
       validator: function (v) {
-        return /^[0-9]{10}$/.test(v); // 10-digit phone number validation
+        return v === null || /^[0-9]{10}$/.test(v); // 10-digit phone number validation
       },
       message: (props) => `${props.value} is not a valid phone number!`
     }
