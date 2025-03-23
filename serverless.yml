@@ -57,3 +57,22 @@ functions:
           path: /signin
           method: POST
           cors: true
+  address:
+    handler: ./handlers/auth.handler
+    events:
+      - http:
+          path: /address
+          method: POST
+          cors: true
+      - http:
+          path: /address
+          method: GET
+          cors: true
+      - http:
+          path: /address
+          method: PUT
+          cors: true
+      - http:
+          path: /address
+          method: DELETE
+          cors: true

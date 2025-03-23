@@ -7,6 +7,11 @@ const _addressSchema = new Schema({
     default: null,
     ref: "Users"
   },
+  studioID: {
+    type: Schema.Types.ObjectId,
+    default: null,
+    ref: "Studios"
+  },
   addressLine1: {
     type: String,
     default: null
