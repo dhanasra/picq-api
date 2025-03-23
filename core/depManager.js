@@ -1,12 +1,12 @@
 // DB
 const USER = require("../models/user.model");
-const STUDIO = require("../models/studio.model");
 const ADDRESS = require("../models/address.model");
+const STUDIO = require("../models/studio.model");
 
 const depManager = {
   USER,
-  STUDIO,
-  ADDRESS
+  ADDRESS,
+  STUDIO
 };
 
 module.exports = depManager;

@@ -84,11 +84,6 @@ const uploadObjectToS3Bucket = async (
     const aws = require("aws-sdk");
     const BUCKET_NAME = process.env.S3_BUCKET_NAME;
 
-    console.log(BUCKET_NAME);
-    console.log(objectName);
-    console.log(objectData);
-    console.log(mimeType);
-
     const params = {
       Bucket: BUCKET_NAME,
       Key: objectName,

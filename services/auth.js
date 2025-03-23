@@ -45,7 +45,7 @@ async function signup(req, res){
 
   try{
     
-    const { firstName, lastName, emailAddress, phoneNumber, password } = req.body;
+    const { studioName, emailAddress, phoneNumber, password } = req.body;
 
     const existingUser = await depManager.USER.getUserModel().findOne({
       $or: [{ emailAddress }, { phoneNumber }]
@@ -56,8 +56,6 @@ async function signup(req, res){
     }
 
     const data = { 
-      firstName,
-      lastName,
       emailAddress,
       phoneNumber,
       roleID: "studio_owner",
@@ -75,13 +73,14 @@ async function signup(req, res){
     const user = await depManager.USER.getUserModel().create(data);
 
     await depManager.STUDIO.getStudioModel().create({
+      studioName: studioName,
       owner: user._id,
       registrationStatus: "pending",
       createdBy: user._id,
       createdAt: Date.now(),
     })
 
-    const displayName = `${user.firstName} ${user.lastName}`;
+    const displayName = `${studioName}`;
 
     const { accessToken } = generateTokens({
       userID: user._id,

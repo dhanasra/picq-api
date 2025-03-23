@@ -1,15 +1,14 @@
-
 const express = require("express");
 const serverless = require("serverless-http");
 const bodyParser = require('body-parser');
-const { validateAccessToken } = require("../middlewares/authenticate");
 
 const app = express();
 
 const processHandler = require("../core/processHandler");
 
-const service = require('../services/auth');
+const service = require('../services/main');
 const cors_origin = require("../core/cors_origin");
+const { validateAccessToken } = require("../middlewares/authenticate");
 
 app.use(bodyParser.urlencoded({
     extended: false
@@ -17,15 +16,9 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(cors_origin());
 
-app.get("/ping", (req, res) => res.send('DONE'))
-
-app.post("/signup", processHandler(service.signup))
-app.post("/signin", processHandler(service.signin))
-
 app.use(validateAccessToken);
 
-app.post("/onboarding", processHandler(service.onboarding))
-
+app.get("/main", processHandler(service.fetchMainData))
 
 module.exports.handler = serverless(app, {
     callbackWaitsForEmptyEventLoop: false

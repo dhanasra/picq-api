@@ -5,7 +5,7 @@ const accessTokenSecret = "e913335d263a473e3d822d5c59b2f4116ea683d66660a7d2aa874
 
 function generateTokens({ userID, roleID }) {
   const accessToken = JWT.sign({ sub: { userID, roleID } }, accessTokenSecret, {
-    expiresIn: "2m",
+    expiresIn: "1d",
   });
   const refreshToken = JWT.sign({ sub: { userID, roleID } }, accessTokenSecret, {
     expiresIn: "30d",
