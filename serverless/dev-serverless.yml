@@ -88,3 +88,14 @@ functions:
           path: /address/{addressID}
           method: DELETE
           cors: true
+  file:
+    handler: ./handlers/file.handler
+    events:
+      - http:
+          path: /upload
+          method: POST
+          cors: true
+      - http:
+          path: /upload/batch
+          method: POST
+          cors: true
