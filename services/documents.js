@@ -20,6 +20,7 @@ async function create(req, res) {
     ]) 
      
     const data = {
+        userID,
         identity: {
             type: identityType,
             picture: identityPicture
