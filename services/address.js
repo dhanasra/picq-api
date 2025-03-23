@@ -28,9 +28,11 @@ async function create(req, res){
 
 async function update(req, res){
     try{
-        const { addressLine1, addressLine2, city, region, country, zipcode, locationLink, addressID } = req.body;
+        const { addressID } = req.params;
 
-        const address = await depManager.ADDRESS.getAddressModel().findById({ addressID });
+        const { addressLine1, addressLine2, city, region, country, zipcode, locationLink } = req.body;
+
+        const address = await depManager.ADDRESS.getAddressModel().findById(addressID);
 
         if(!address){
             return responser.error(res, null, "TOKEN_E001");
@@ -71,7 +73,7 @@ async function get(req, res){
     try{
         const { addressID } = req.params;
 
-        const address = await depManager.ADDRESS.getAddressModel().findById({ addressID });
+        const address = await depManager.ADDRESS.getAddressModel().findById(addressID);
 
         return responser.success(res, address, "ADDRESS_S001");
     }catch(e){

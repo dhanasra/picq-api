@@ -5,6 +5,7 @@ async function validateAccessToken(req, res, next) {
     try {
         const authHeader = req.headers.authorization;
 
+
         if (!authHeader) {
             return responser.error(res, "GLOBAL_E002", 401);
         }
@@ -23,19 +24,20 @@ async function validateAccessToken(req, res, next) {
 
         const decoded = verifyToken(accessToken);
 
+        console.log(decoded);
+
         if (!decoded) {
             return responser.error(res, "GLOBAL_E002", 401);
         }
 
-        const { userID, roleID, displayName } = decoded.sub;
+        const { userID, roleID } = decoded.sub;
 
-        if (!userID || !roleID || !displayName) {
+        if (!userID || !roleID) {
             return responser.error(res, "GLOBAL_E002", 401);
         }
 
         req.userID = userID;
         req.roleID = roleID;
-        req.displayName = displayName;
 
         return next();
     } catch (error) {

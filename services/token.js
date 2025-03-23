@@ -34,6 +34,7 @@ function getAccessToken(req, res) {
     const token = generateTokens(response);
     return responser.success(res, token, "TOKEN_S001");
   } catch (error) {
+    console.log(error);
     return responser.error(res, error, "GLOBAL_E001");
   }
 }

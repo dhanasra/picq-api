@@ -65,14 +65,14 @@ functions:
           method: POST
           cors: true
       - http:
-          path: /address
+          path: /address/{addressID}
           method: GET
           cors: true
       - http:
-          path: /address
+          path: /address/{addressID}
           method: PUT
           cors: true
       - http:
-          path: /address
+          path: /address/{addressID}
           method: DELETE
           cors: true
