@@ -4,7 +4,16 @@ const Schema = mongoose.Schema;
 const studioSchema = new Schema({
   studioName: {
     type: String,
-    default: null
+    default: null,
+    trim: true,
+    minlength: [2, 'Studio name must be at least 2 characters long'],
+    maxlength: [50, 'Studio name cannot exceed 50 characters'],
+    validate: {
+      validator: function (v) {
+        return /^[A-Za-z]+$/.test(v); 
+      },
+      message: (props) => `${props.value} is not a valid name! Only letters are allowed.`
+    }
   },
   frontDeskPhone: {
     type: String,

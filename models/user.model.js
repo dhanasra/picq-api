@@ -19,8 +19,6 @@ const userSchema = new Schema({
     type: String,
     default: null,
     trim: true,
-    minlength: [2, 'Last name must be at least 2 characters long'],
-    maxlength: [50, 'Last name cannot exceed 50 characters'],
     validate: {
       validator: function (v) {
         return /^[A-Za-z]+$/.test(v);
