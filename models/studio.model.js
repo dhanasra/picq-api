@@ -4,11 +4,55 @@ const Schema = mongoose.Schema;
 const studioSchema = new Schema({
   studioName: {
     type: String,
-    required: true
+    default: null
   },
-  description: {
+  frontDeskPhone: {
     type: String,
     default: null
+  },
+  minTime: {
+    type: String,
+    default: null
+  },
+  category: {
+    type: String,
+    default: null
+  },
+  services: {
+    type: [String],
+    default: []
+  },
+  price: {
+    type: String,
+    default: null
+  },
+  offer: {
+    type: Object,
+    default: null
+  },
+  about: {
+    type: String,
+    default: null
+  },
+  tc: {
+    type: String,
+    default: null
+  },
+  equipments: {
+    type: [String],
+    default: []
+  },
+  facilities: {
+    type: [String],
+    default: []
+  },
+  products: {
+    type: [Object],
+    default: []
+  },
+  images: {
+    type: [String],
+    default: []
   },
   email: {
     type: String,
@@ -30,6 +74,26 @@ const studioSchema = new Schema({
       message: (props) => `${props.value} is not a valid phone number!`
     }
   },
+  ownerEmail: {
+    type: String,
+    default: null,
+    validate: {
+      validator: function (v) {
+        return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v); // Basic email validation
+      },
+      message: (props) => `${props.value} is not a valid email!`
+    }
+  },
+  ownerPhoneNumber: {
+    type: String,
+    default: null,
+    validate: {
+      validator: function (v) {
+        return /^[0-9]{10}$/.test(v); // 10-digit phone number validation
+      },
+      message: (props) => `${props.value} is not a valid phone number!`
+    }
+  },
   address: {
     type: Schema.Types.ObjectId,
     default: null,
@@ -42,15 +106,6 @@ const studioSchema = new Schema({
   banner: {
     type: String,
     default: null
-  },  
-  ownerType: {
-    type: String,
-    enum: ["individual", "company"],
-    default: null
-  },
-  images: {
-    type: [String],
-    default: []
   },
   operationalHours: {
     opensAt: {
@@ -71,20 +126,6 @@ const studioSchema = new Schema({
       message: (props) => `${props.value} contains an invalid day. Days must be integers between 0 and 6.`
     },
     default: []
-  },
-  studioType: { 
-    type: String, 
-    enum: ["rentals", "shoots", "both"],
-    default: null
-  },  
-  services: { 
-    type: String, 
-    enum: ["photography", "videography", "both"],
-    default: null
-  },  
-  offerings: { 
-    type: [String], 
-    default: [] 
   },
   documents: {
     type: Schema.Types.ObjectId,

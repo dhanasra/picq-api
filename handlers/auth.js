@@ -19,8 +19,8 @@ app.use(cors_origin());
 app.get("/ping", (req, res) => res.send('DONE'))
 
 app.post("/signup", processHandler(service.signup))
-
 app.post("/signin", processHandler(service.signin))
+app.post("/onboarding", processHandler(service.onboarding))
 
 
 module.exports.handler = serverless(app, {
