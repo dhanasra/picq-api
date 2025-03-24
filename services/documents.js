@@ -34,7 +34,7 @@ async function create(req, res) {
             picture: pancardPicture
         },
         businessCertificate: businessCertificatePicture,
-        bankInfo,
+        bankInfo: JSON.parse(bankInfo || "{}"),
         createdAt: Date.now()
     }
 
@@ -75,7 +75,7 @@ async function update(req, res) {
         };
         if (gstin) document.gstin = { isRegistered: true, number: gstin };
         if (businessCertificatePicture) document.businessCertificate = businessCertificatePicture;
-        if (bankInfo) document.bankInfo = bankInfo;
+        if (bankInfo) document.bankInfo = JSON.parse(bankInfo || "{}");
 
         await document.save();
         return responser.success(res, document, "STUDIO_S001");
