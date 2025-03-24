@@ -52,12 +52,6 @@ const bankSchema = new Schema({
   ifscCode: {
     type: String,
     required: true,
-    validate: {
-      validator: function (v) {
-        return /^[A-Z]{4}0[A-Z0-9]{6}$/.test(v);
-      },
-      message: (props) => `${props.value} is not a valid IFSC code!`
-    }
   },
   bankName: { type: String, required: true },
   branch: { type: String, default: null }
