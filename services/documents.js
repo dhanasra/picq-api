@@ -50,7 +50,7 @@ async function create(req, res) {
 async function update(req, res) {
     try {
         const { documentID } = req.params;
-        console.log(req.body);
+
         const { identityType, bankInfo, panNumber, gstin } = req.body;
         const document = await depManager.DOCUMENTS.getDocumentsModel().findById(documentID);
 
@@ -66,7 +66,7 @@ async function update(req, res) {
         const [identityPicture, pancardPicture, businessCertificatePicture] = await Promise.all(Object.values(uploadPaths));
 
         document.identity = {
-            identityType: identityType ?? document.identity?.identityType,
+            type: identityType ?? document.identity?.identityType,
             picture: identityPicture ?? document.identity?.picture
         };
         document.panCard = {
