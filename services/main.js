@@ -14,9 +14,15 @@ async function fetchMainData(req, res){
                 .findOne({ createdBy: userID }).lean()
         ])
 
-        if(studio.address){
-            studio.address = await depManager.ADDRESS.getAddressModel().findById(studio.address)
-        }   
+        const [address, documents] = await Promise.all([
+            studio.address
+            ? depManager.ADDRESS.getAddressModel().findById(studio.address): null,
+            studio.documents
+            ? depManager.DOCUMENTS.getDocumentsModel().findById(studio.documents): null
+        ]) 
+
+        studio.address = address;
+        studio.documents = documents;
 
         const token = generateTokens({ userID, roleID });
 
