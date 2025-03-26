@@ -22,6 +22,14 @@ const studioSchema = new Schema({
     type: String,
     default: null
   },
+  noOfRooms: {
+    type: String,
+    default: null
+  },
+  rooms: {
+    type: [String],
+    default: []
+  },
   category: {
     type: String,
     default: null
