@@ -26,7 +26,7 @@ async function fetchMainData(req, res){
 
         const token = generateTokens({ userID, roleID });
 
-        return responser.success(res, { user, studio, token }, "_S001");
+        return responser.success(res, { user, studio, token }, "MAIN_S001");
     }catch(e){
         console.log(e);
         return responser.error(res, "GLOBAL_E001");

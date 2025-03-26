@@ -110,3 +110,10 @@ functions:
           path: /documents/{documentID}
           method: PUT
           cors: true
+  bookings:
+    handler: ./handlers/bookings.handler
+    events:
+      - http:
+          path: /bookings/offline
+          method: POST
+          cors: true

@@ -40,10 +40,10 @@ async function create(req, res) {
 
     const document = await depManager.DOCUMENTS.getDocumentsModel().create(data);
 
-    return responser.success(res, document, "STUDIO_S001");
+    return responser.success(res, document, "DOCUMENTS_S001");
   } catch (error) {
     console.error("Error creating studio:", error);
-    return responser.error(res, null, "R001");
+    return responser.error(res, "GLOBAL_E001");
   }
 }
 
@@ -78,10 +78,10 @@ async function update(req, res) {
         if (bankInfo) document.bankInfo = JSON.parse(bankInfo || "{}");
 
         await document.save();
-        return responser.success(res, document, "STUDIO_S001");
+        return responser.success(res, document, "DOCUMENTS_S001");
     } catch (error) {
         console.error("Error updating document:", error);
-        return responser.error(res, null, "R001");
+        return responser.error(res, "GLOBAL_E001");
     }
 }
 

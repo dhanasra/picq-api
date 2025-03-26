@@ -104,7 +104,7 @@ const userSchema = new Schema({
   },
   loginType: {
     type: String,
-    enum: ["phone", "google", "password"],
+    enum: ["phone", "google", "password", "offline"],
     default: "phone"
   },
   authId: {
