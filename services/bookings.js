@@ -3,7 +3,7 @@ const responser = require("../core/responser");
 
 async function createOffline(req, res) {
     try {
-        const { name, phoneNumber, email, studioID, dateTime, endDateTime, duration, amount, paymentMethod, paymentStatus, notes } = req.body;
+        const { name, phoneNumber, email, studioID, dateTime, endDateTime, duration, amount, room, paymentMethod, paymentStatus, notes } = req.body;
 
         // Split name into first and last name
         const [firstName, ...lastNameParts] = name.trim().split(" ");
@@ -32,6 +32,7 @@ async function createOffline(req, res) {
             dateTime,
             endDateTime,
             duration,
+            room,
             amount,
             status: "confirmed",
             paymentDetails: {

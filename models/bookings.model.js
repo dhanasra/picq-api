@@ -29,6 +29,10 @@ const _bookingsSchema = new Schema({
     type: Date, 
     required: true 
   },
+  room: { 
+    type: String, 
+    default: null 
+  },
   endDateTime: { 
     type: Date,
     default: null 
