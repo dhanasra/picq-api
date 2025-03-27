@@ -25,6 +25,11 @@ const _bookingsSchema = new Schema({
     type: String, 
     default: null,
   },
+  bookingType: { 
+    type: String, 
+    enum: ['online', 'offline'], 
+    default: "online",
+  },
   dateTime: { 
     type: Date, 
     required: true 

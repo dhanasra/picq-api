@@ -19,6 +19,8 @@ app.use(cors_origin());
 app.use(validateAccessToken);
 
 app.post("/bookings/offline", processHandler(service.createOffline))
+app.put("/bookings/offline/:id", processHandler(service.updateOffline))
+app.get("/bookings", processHandler(service.paginate));
 
 module.exports.handler = serverless(app, {
     callbackWaitsForEmptyEventLoop: false

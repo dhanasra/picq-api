@@ -117,3 +117,11 @@ functions:
           path: /bookings/offline
           method: POST
           cors: true
+      - http:
+          path: /bookings/offline/{id}
+          method: PUT
+          cors: true
+      - http:
+          path: /bookings
+          method: GET
+          cors: true
