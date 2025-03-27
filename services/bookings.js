@@ -89,7 +89,7 @@ async function updateOffline(req, res) {
     const booking = await depManager.BOOKINGS.getBookingsModel().findById(bookingID)
 
     if(!booking){
-
+      return responser.error(res, "BOOKINGS_E001");
     }
 
     if(dateTime){
@@ -121,7 +121,7 @@ async function updateOffline(req, res) {
 
     await booking.save();
 
-    return responser.success(res, booking, "BOOKINGS_S001");
+    return responser.success(res, booking, "BOOKINGS_S002");
   } catch (e) {
     console.error("Error in createOffline:", e);
     return responser.error(res, "GLOBAL_E001");
@@ -187,15 +187,61 @@ async function paginate(req, res) {
     ]);
     const total = totalCountResult[0]?.totalCount || 0;
 
-    return responser.success(res, { bookings, total }, "STUDIO_S001");
+    return responser.success(res, { bookings, total }, "BOOKINGS_S003");
   } catch (e) {
     console.error("Error fetching bookings:", error);
-    return responser.error(res, null, "R001");
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
+
+async function getBooking(req, res) {
+  try {
+    const bookingID = req.params.id;
+
+    const data = await depManager.BOOKINGS.getBookingsModel().aggregate([
+      { $match: { _id: new ObjectId(bookingID) } },
+      {
+        $lookup: {
+          from: "Users",
+          localField: "userID",
+          foreignField: "_id",
+          pipeline: [
+            { $project: { _id: 1, firstName: 1, lastName: 1, email: 1, phoneNumber: 1 } }
+          ],
+          as: "user",
+        },
+      },
+      { $unwind: "$user" },
+      {
+        $lookup: {
+          from: "Studios",
+          localField: "studioID",
+          foreignField: "_id",
+          pipeline: [
+            { $project: { _id: 1, studioName: 1 } }
+          ],
+          as: "studio",
+        },
+      },
+      { $unwind: "$studio" },
+      { $sort: { createdAt: -1 } }
+    ]);
+
+    if(!data){
+      return responser.error(res, "BOOKINGS_E001");
+    }
+
+    return responser.success(res, data[0], "BOOKINGS_S004");
+  } catch (e) {
+    console.log(e)
+    return responser.error(res, "GLOBAL_E001");
   }
 }
 
 module.exports = { 
   createOffline,
   updateOffline,
-  paginate 
+  paginate ,
+  getBooking
 };

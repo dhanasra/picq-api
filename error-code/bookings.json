@@ -1,5 +1,9 @@
 {
     "en": {
-        "S001": "Booking created successfully."
+        "S001": "Booking created successfully.",
+        "S002": "Booking updated successfully.",
+        "S003": "Bookings fetched successfully.",
+        "S004": "Booking details fetched successfully.",
+        "E004": "Booking details not found."
     }
 }

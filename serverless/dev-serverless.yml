@@ -125,3 +125,7 @@ functions:
           path: /bookings
           method: GET
           cors: true
+      - http:
+          path: /bookings/{id}
+          method: GET
+          cors: true
