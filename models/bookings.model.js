@@ -64,7 +64,7 @@ const _bookingsSchema = new Schema({
     },
     paymentMethod: {
       type: String,
-      enum: ['Card', 'UPI', 'Net Banking', 'Cash on Delivery', 'Online'],
+      enum: ['Card', 'UPI', 'Net Banking', 'Cash', 'Online'],
       default: 'Online'
     },
     transactionID: { 
