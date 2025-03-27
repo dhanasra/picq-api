@@ -15,6 +15,7 @@ async function createOffline(req, res) {
       amount,
       room,
       category,
+      service,
       paymentMethod,
       paymentStatus,
       notes,
@@ -48,6 +49,7 @@ async function createOffline(req, res) {
       endDateTime,
       duration,
       room,
+      service,
       category,
       amount,
       status: "confirmed",
@@ -83,6 +85,7 @@ async function updateOffline(req, res) {
       duration,
       amount,
       room,
+      service,
       category,
       paymentMethod,
       paymentStatus,
@@ -103,6 +106,9 @@ async function updateOffline(req, res) {
     }
     if(category){
       booking.category = category;
+    }
+    if(service){
+      booking.service = service;
     }
     if(duration){
       booking.duration = duration;
