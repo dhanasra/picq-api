@@ -18,6 +18,7 @@ async function createOffline(req, res) {
       service,
       paymentMethod,
       paymentStatus,
+      partialPayment,
       notes,
     } = req.body;
 
@@ -57,6 +58,7 @@ async function createOffline(req, res) {
       paymentDetails: {
         status: paymentStatus,
         paymentMethod: paymentMethod,
+        partialPayment: partialPayment
       },
       notes,
       createdAt: Date.now(),
@@ -89,6 +91,7 @@ async function updateOffline(req, res) {
       category,
       paymentMethod,
       paymentStatus,
+      partialPayment,
       notes,
     } = req.body;
 
@@ -121,6 +124,9 @@ async function updateOffline(req, res) {
     }
     if(paymentMethod){
       booking.paymentDetails = { ...booking.paymentDetails, paymentMethod }
+    }
+    if(partialPayment){
+      booking.partialPayment = { ...booking.paymentDetails, partialPayment }
     }
     if(paymentStatus){
       booking.paymentDetails = { ...booking.paymentDetails, status: paymentStatus }

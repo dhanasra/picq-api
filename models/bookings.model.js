@@ -62,6 +62,11 @@ const _bookingsSchema = new Schema({
         enum: ['pending', 'partial', 'completed'], 
         default: 'pending' 
     },
+    partialPayment: {
+      type: Number, 
+      default: null,
+      min: 0 
+    },
     paymentMethod: {
       type: String,
       enum: ['Card', 'UPI', 'Net Banking', 'Cash', 'Online'],
