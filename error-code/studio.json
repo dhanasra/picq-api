@@ -1,6 +1,9 @@
 {
     "en": {
-        "S001": "Logged In",
-        "S002": "Registered"
+        "E001": "Access Denied!",
+        "E002": "Studio not found!",
+        "S001": "Studios Fetched Successfully!",
+        "S002": "Studios Details Fetched Successfully!",
+        "S003": "Studios Updated Successfully!"
     }
 }

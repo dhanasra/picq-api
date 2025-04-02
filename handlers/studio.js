@@ -6,8 +6,9 @@ const app = express();
 
 const processHandler = require("../core/processHandler");
 
-const service = require('../services/auth');
+const service = require('../services/studio');
 const cors_origin = require("../core/cors_origin");
+const { validateAccessToken } = require("../middlewares/authenticate");
 
 app.use(bodyParser.urlencoded({
     extended: false
@@ -15,12 +16,11 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 app.use(cors_origin());
 
-app.get("/ping", (req, res) => res.send('DONE'))
+app.use(validateAccessToken);
 
-app.post("/signup", processHandler(service.signup))
-
-app.post("/signin", processHandler(service.signin))
-
+app.put("/studio/:id", processHandler(service.update))
+app.get("/studio/:id", processHandler(service.details));
+app.get("/studio", processHandler(service.paginate));
 
 module.exports.handler = serverless(app, {
     callbackWaitsForEmptyEventLoop: false
