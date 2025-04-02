@@ -1,5 +1,7 @@
 {
     "en": {
-        "S001": "Success!"
+        "S001": "Success!",
+        "E001": "User not found!",
+        "E002": "Studio not found!"
     }
 }

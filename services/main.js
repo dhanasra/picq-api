@@ -8,11 +8,30 @@ async function fetchMainData(req, res){
         const userID = req.userID;
         const roleID = req.roleID;
 
+        if(roleID=='admin'){
+            const user = await depManager.USER.getUserModel().findById(userID);
+
+            if(!user){
+                return responser.error(res, "MAIN_E001");
+            }
+
+            const token = generateTokens({ userID, roleID });
+            return responser.success(res, { user, token }, "MAIN_S001");
+        }
+
         const [ user, studio ] = await Promise.all([
             depManager.USER.getUserModel().findById(userID),
             depManager.STUDIO.getStudioModel()
                 .findOne({ createdBy: userID }).lean()
         ])
+
+        if(!user){
+            return responser.error(res, "MAIN_E001");
+        }
+
+        if(!studio){
+            return responser.error(res, "MAIN_E002");
+        }
 
         const [address, documents] = await Promise.all([
             studio.address
