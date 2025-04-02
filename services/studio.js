@@ -6,12 +6,29 @@ async function paginate(req, res) {
   try {
 
     const { userID, roleID } = req;
+    const { page = 1, limit = 10, query, status } = req.query;
 
     if(roleID!='admin'){
       return responser.error(res, "STUDIO_E001");
     }
 
-    const studios = await depManager.STUDIO.getStudioModel().aggregate([
+    const filter = {}
+    if(status){
+      filter.registrationStatus = status;
+    }
+    if(query){
+      filter.studioName = { $regex: query, $options: "i" };
+    }
+
+    const totalCountPromise = depManager.STUDIO.getStudioModel().aggregate([
+      { $match: filter },
+      { $count: "totalCount" },
+    ]);
+
+    const studiosPromise = depManager.STUDIO.getStudioModel().aggregate([
+      {
+        $match: filter
+      },
       { 
           $lookup: {
               from: "Addresses",
@@ -45,9 +62,18 @@ async function paginate(req, res) {
       { 
           $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } 
       },
+      { $sort: { createdAt: -1 } },
+      { $skip: (page - 1) * limit },
+      { $limit: parseInt(limit) },
     ]);
 
-    return responser.success(res, studios, "STUDIO_S001");
+    const [totalCountResult, studios] = await Promise.all([
+      totalCountPromise,
+      studiosPromise,
+    ]);
+    const total = totalCountResult[0]?.totalCount || 0;
+
+    return responser.success(res, { studios, total }, "STUDIO_S001");
   }catch(e){
     console.error(e);
     return responser.error(res, "GLOBAL_E001");
