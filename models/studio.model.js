@@ -143,6 +143,14 @@ const studioSchema = new Schema({
     },
     default: []
   },
+  closedDaysOverride: {
+    type: [String], 
+    default: []
+  },
+  openDaysOverride: {
+    type: [String], 
+    default: []
+  },
   documents: {
     type: Schema.Types.ObjectId,
     ref: "Documents",
