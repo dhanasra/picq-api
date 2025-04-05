@@ -1,34 +1,13 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const ADDRESS = require("../models/address.model");
 
-const studioSchema = new Schema({
-  studioName: {
+const individualRoomsSchema = new Schema({
+  name: {
     type: String,
     default: null,
     trim: true,
     minlength: [2, 'Studio name must be at least 2 characters long'],
     maxlength: [50, 'Studio name cannot exceed 50 characters'],
-  },
-  ownerType: {
-    type: String,
-    default: null
-  },
-  frontDeskPhone: {
-    type: String,
-    default: null
-  },
-  minTime: {
-    type: String,
-    default: null
-  },
-  noOfRooms: {
-    type: String,
-    default: null
-  },
-  rooms: {
-    type: [String],
-    default: []
   },
   category: {
     type: String,
@@ -46,6 +25,48 @@ const studioSchema = new Schema({
     type: Object,
     default: null
   },
+  images: {
+    type: [String],
+    default: []
+  },
+  equipments: {
+    type: [String],
+    default: []
+  },
+  products: {
+    type: [Object],
+    default: []
+  }
+});
+
+const studioSchema = new Schema({
+  studioName: {
+    type: String,
+    default: null,
+    trim: true,
+    minlength: [2, 'Studio name must be at least 2 characters long'],
+    maxlength: [50, 'Studio name cannot exceed 50 characters'],
+  },
+  ownerType: {
+    type: String,
+    default: null
+  },
+  frontDeskPhone: {
+    type: String,
+    default: null
+  },
+  noOfRooms: {
+    type: String,
+    default: null
+  },
+  minTime: {
+    type: String,
+    default: null
+  },
+  rooms: {
+    type: [individualRoomsSchema],
+    default: []
+  },
   about: {
     type: String,
     default: null
@@ -54,16 +75,8 @@ const studioSchema = new Schema({
     type: String,
     default: null
   },
-  equipments: {
-    type: [String],
-    default: []
-  },
   facilities: {
     type: [String],
-    default: []
-  },
-  products: {
-    type: [Object],
     default: []
   },
   images: {

@@ -152,7 +152,7 @@ async function update(req, res) {
       return responser.error(res, "STUDIO_E001");
     }
 
-    const { studioName, email, documents, noOfRooms, rooms, operationalHours, openDays, closedDaysOverride, openDaysOverride, ownerPhoneNumber, ownerEmail, ownerType, address, frontDeskPhone, minTime, category, services, price, offer, images, about, tc, equipments, facilities, products, registrationStatus } = req.body;
+    const { studioName, email, documents, noOfRooms, rooms, operationalHours, openDays, closedDaysOverride, openDaysOverride, ownerPhoneNumber, ownerEmail, ownerType, address, frontDeskPhone, about, tc, facilities, registrationStatus } = req.body;
     const studio = await depManager.STUDIO.getStudioModel().findById(studioID);
 
     if(!studio){
@@ -168,29 +168,11 @@ async function update(req, res) {
     if(frontDeskPhone){
       studio.frontDeskPhone = frontDeskPhone;
     }
-    if(minTime){
-      studio.minTime = minTime;
-    }
     if(noOfRooms){
       studio.noOfRooms = noOfRooms;
     }
     if(rooms){
       studio.rooms = rooms;
-    }
-    if(category){
-      studio.category = category;
-    }
-    if(services){
-      studio.services = services;
-    }
-    if(price){
-      studio.price = price;
-    }
-    if(offer){
-      studio.offer = offer;
-    }
-    if(images){
-      studio.images = images;
     }
     if(about){
       studio.about = about;
@@ -198,14 +180,8 @@ async function update(req, res) {
     if(tc){
       studio.tc = tc;
     }
-    if(equipments){
-      studio.equipments = equipments;
-    }
     if(facilities){
       studio.facilities = facilities
-    }
-    if(products){
-      studio.products = products;
     }
     if(ownerType){
       studio.ownerType = ownerType;
