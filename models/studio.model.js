@@ -4,14 +4,12 @@ const Schema = mongoose.Schema;
 const individualRoomsSchema = new Schema({
   name: {
     type: String,
-    default: null,
+    required: true,
     trim: true,
-    minlength: [2, 'Studio name must be at least 2 characters long'],
-    maxlength: [50, 'Studio name cannot exceed 50 characters'],
   },
   category: {
     type: String,
-    default: null
+    required: true,
   },
   services: {
     type: [String],
@@ -19,7 +17,7 @@ const individualRoomsSchema = new Schema({
   },
   price: {
     type: String,
-    default: null
+    required: true,
   },
   offer: {
     type: Object,
