@@ -172,6 +172,14 @@ const studioSchema = new Schema({
     ref: "Users",
     required: true
   },
+  adminNotes: {
+    type: String, 
+    default: null
+  },
+  cancelReason: {
+    type: String, 
+    default: null
+  },
   registrationStatus: {
     type: String,
     enum: ["pending", "completed", "awaiting_approval", "approved", "paused", "rejected", "invited"],
