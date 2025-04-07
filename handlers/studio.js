@@ -18,8 +18,8 @@ app.use(cors_origin());
 
 app.use(validateAccessToken);
 
-app.put("/studio/:id", processHandler(service.update))
-app.get("/studio/:id", processHandler(service.details));
+app.put("/studio/:studioId", processHandler(service.update))
+app.get("/studio/:studioId", processHandler(service.details));
 app.get("/studio", processHandler(service.paginate));
 app.put("/studio/:studioId/room/:roomId", processHandler(service.updateRoom))
 app.delete("/studio/:studioId/room/:roomId", processHandler(service.deleteRoom))

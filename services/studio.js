@@ -83,7 +83,7 @@ async function paginate(req, res) {
 async function details(req, res) {
   try {
 
-    const studioID = req.params.id;
+    const studioID = req.params.studioId;
 
     const { userID, roleID } = req;
 
@@ -144,7 +144,7 @@ async function details(req, res) {
 async function update(req, res) {
   try {
 
-    const studioID = req.params.id;
+    const studioID = req.params.studioId;
 
     const { userID, roleID } = req;
 
