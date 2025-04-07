@@ -133,7 +133,7 @@ functions:
     handler: ./handlers/studio.handler
     events:
       - http:
-          path: /studio
+          path: /studios
           method: GET
           cors: true
       - http:
