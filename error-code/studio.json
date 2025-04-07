@@ -4,6 +4,9 @@
         "E002": "Studio not found!",
         "S001": "Studios Fetched Successfully!",
         "S002": "Studios Details Fetched Successfully!",
-        "S003": "Studios Updated Successfully!"
+        "S003": "Studios Updated Successfully!",
+        "S004": "Rooms Created Successfully!",
+        "S005": "Room Updated Successfully!",
+        "S006": "Room Deleted Successfully!"
     }
 }

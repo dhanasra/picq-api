@@ -236,8 +236,77 @@ async function update(req, res) {
   }
 }
 
+async function createRoom(req, res) {
+  try {
+
+    const studioID = req.params.id;
+
+    const { room } = req.body;
+
+    const studio = await depManager.STUDIO.getStudioModel().findByIdAndUpdate(
+      studioID,
+      { $push: { rooms: room } },
+      { new: true }
+    );
+ 
+    return responser.success(res, studio, "STUDIO_S004");
+  }catch(e){
+    console.error(e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
+async function updateRoom(req, res) {
+  try {
+
+    const studioID = req.params.studioId;
+    const roomID = req.params.roomId;
+
+    const { room } = req.body;
+
+    const studio = await depManager.STUDIO.getStudioModel().findOneAndUpdate(
+      { _id: studioID, "rooms._id": roomID },
+      {
+        $set: {
+          "rooms.$": room 
+        }
+      },
+      { new: true } 
+    );
+
+    return responser.success(res, studio, "STUDIO_S005");
+  }catch(e){
+    console.error(e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
+async function deleteRoom(req, res) {
+  try {
+    const studioID = req.params.studioId;
+    const roomID = req.params.roomId;
+
+    const studio = await depManager.STUDIO.getStudioModel().findOneAndUpdate(
+      { _id: studioID }, 
+      {
+        $pull: { "rooms": { _id: roomID } } 
+      },
+      { new: true }
+    );
+
+    return responser.success(res, studio, "STUDIO_S006");
+  } catch (e) {
+    console.error(e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
+
 module.exports = {
   paginate,
   details,
-  update
+  update,
+  createRoom,
+  updateRoom,
+  deleteRoom
 }
