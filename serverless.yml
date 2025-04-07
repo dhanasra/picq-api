@@ -145,14 +145,14 @@ functions:
           method: PUT
           cors: true
       - http:
-          path: /studio/{studioId}/room
+          path: /studio/r/{studioId}
           method: POST
           cors: true
       - http:
-          path: /studio/{studioId}/room/{roomId}
+          path: /studio/r/{studioId}/{roomId}
           method: PUT
           cors: true
       - http:
-          path: /studio/{studioId}/room/{roomId}
+          path: /studio/r/{studioId}/{roomId}
           method: DELETE
           cors: true
