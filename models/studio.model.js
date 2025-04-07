@@ -35,7 +35,7 @@ const individualRoomsSchema = new Schema({
     type: [Object],
     default: []
   }
-});
+}, { _id: true });
 
 const studioSchema = new Schema({
   studioName: {
