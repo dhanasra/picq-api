@@ -45,6 +45,23 @@ module.exports.getDDMMYYYY = (currentDate = new Date(), seperator = "-") => {
   return formattedDate;
 };
 
+module.exports.sendSms = async ({ otp, phoneNumber }) => {
+  let plivo = require('plivo');
+  let client = new plivo.Client(process.env.PLIVO_AUTH_ID, process.env.PLIVO_AUTH_TOKEN);
+
+  const message = `Your OTP for Clix: ${otp}. Valid for 5 mins. Ignore if not requested.`;
+
+  await client.messages.create({
+      src: 'CLIXAPP',
+      dst: phoneNumber,
+      text: message
+  }).then(function(message_created) {
+      console.log(message_created);
+  }).catch(function(error) {
+      console.error('Error sending SMS:', error);
+  });
+}
+
 module.exports.uploadFile = async (folderName, file) => {
   try{
     let _uploadFolder = folderName;

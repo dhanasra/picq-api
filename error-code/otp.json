@@ -1,0 +1,8 @@
+{
+    "en": {
+        "S001": "OTP sent successfully!",
+        "S002": "Verified successfully!",
+        "E001": "Invalid or expired OTP!",
+        "E002": "OTP has expired"
+    }
+}

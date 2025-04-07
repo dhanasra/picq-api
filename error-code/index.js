@@ -5,6 +5,7 @@ const ADDRESS = require("./address.json");
 const MAIN = require("./main.json");
 const DOCUMENTS = require("./documents.json");
 const BOOKINGS = require("./bookings.json");
+const OTP = require("./otp.json");
 
 module.exports = {
     AUTH,
@@ -13,5 +14,6 @@ module.exports = {
     ADDRESS,
     MAIN,
     DOCUMENTS,
-    BOOKINGS
+    BOOKINGS,
+    OTP
 }
