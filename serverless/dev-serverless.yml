@@ -145,7 +145,7 @@ functions:
           method: PUT
           cors: true
       - http:
-          path: /studio/{id}/room
+          path: /studio/{studioId}/room
           method: POST
           cors: true
       - http:

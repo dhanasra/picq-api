@@ -23,7 +23,7 @@ app.get("/studio/:id", processHandler(service.details));
 app.get("/studio", processHandler(service.paginate));
 app.put("/studio/:studioId/room/:roomId", processHandler(service.updateRoom))
 app.delete("/studio/:studioId/room/:roomId", processHandler(service.deleteRoom))
-app.post("/studio/:id/room/", processHandler(service.createRoom))
+app.post("/studio/:studioId/room/", processHandler(service.createRoom))
 
 module.exports.handler = serverless(app, {
     callbackWaitsForEmptyEventLoop: false

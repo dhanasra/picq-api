@@ -239,7 +239,7 @@ async function update(req, res) {
 async function createRoom(req, res) {
   try {
 
-    const studioID = req.params.id;
+    const studioID = req.params.studioId;
 
     const { room } = req.body;
 
