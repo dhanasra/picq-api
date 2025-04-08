@@ -144,15 +144,15 @@ functions:
           path: /studio/{studioId}
           method: PUT
           cors: true
-      # - http:
-      #     path: /studio/r/{studioId}
-      #     method: POST
-      #     cors: true
-      # - http:
-      #     path: /studio/r/{studioId}/{roomId}
-      #     method: PUT
-      #     cors: true
-      # - http:
-      #     path: /studio/r/{studioId}/{roomId}
-      #     method: DELETE
-      #     cors: true
+      - http:
+          path: /studio/{studioId}/room
+          method: POST
+          cors: true
+      - http:
+          path: /studio/{studioId}/room/{roomId}
+          method: PUT
+          cors: true
+      - http:
+          path: /studio/{studioId}/room/{roomId}
+          method: DELETE
+          cors: true
