@@ -20,10 +20,10 @@ app.use(validateAccessToken);
 
 app.put("/studio/:studioId", processHandler(service.update))
 app.get("/studio/:studioId", processHandler(service.details));
-app.get("/studio", processHandler(service.paginate));
-app.put("/studio/r/:studioId/:roomId", processHandler(service.updateRoom))
-app.delete("/studio/r/:studioId/:roomId", processHandler(service.deleteRoom))
-app.post("/studio/r/:studioId/", processHandler(service.createRoom))
+app.get("/studios", processHandler(service.paginate));
+app.put("/studio/:studioId/room/:roomId", processHandler(service.updateRoom))
+app.delete("/studio/:studioId/room/:roomId", processHandler(service.deleteRoom))
+app.post("/studio/:studioId/room", processHandler(service.createRoom))
 
 module.exports.handler = serverless(app, {
     callbackWaitsForEmptyEventLoop: false
