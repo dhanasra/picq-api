@@ -7,6 +7,10 @@ const individualRoomsSchema = new Schema({
     required: true,
     trim: true,
   },
+  minTime: {
+    type: String,
+    default: null
+  },
   category: {
     type: String,
     required: true,
@@ -54,10 +58,6 @@ const studioSchema = new Schema({
     default: null
   },
   noOfRooms: {
-    type: String,
-    default: null
-  },
-  minTime: {
     type: String,
     default: null
   },
