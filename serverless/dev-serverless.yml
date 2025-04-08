@@ -129,21 +129,21 @@ functions:
           path: /bookings/{id}
           method: GET
           cors: true
-  studio:
-    handler: ./handlers/studio.handler
-    events:
-      - http:
-          path: /studio
-          method: GET
-          cors: true
-      - http:
-          path: /studio/{studioId}
-          method: GET
-          cors: true
-      - http:
-          path: /studio/{studioId}
-          method: PUT
-          cors: true
+  # studio:
+  #   handler: ./handlers/studio.handler
+  #   events:
+  #     - http:
+  #         path: /studio
+  #         method: GET
+  #         cors: true
+  #     - http:
+  #         path: /studio/{studioId}
+  #         method: GET
+  #         cors: true
+  #     - http:
+  #         path: /studio/{studioId}
+  #         method: PUT
+  #         cors: true
       # - http:
       #     path: /studio/r/{studioId}
       #     method: POST
