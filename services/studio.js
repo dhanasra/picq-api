@@ -152,7 +152,7 @@ async function update(req, res) {
       return responser.error(res, "STUDIO_E001");
     }
 
-    const { studioName, email, documents, noOfRooms, rooms, operationalHours, openDays, closedDaysOverride, openDaysOverride, ownerPhoneNumber, ownerEmail, ownerType, address, frontDeskPhone, about, tc, facilities, adminNotes, cancelReason, registrationStatus } = req.body;
+    const { studioName, email, documents, noOfRooms, frontDeskPhoneVerified, ownerPhoneNumberVerified, rooms, operationalHours, openDays, closedDaysOverride, openDaysOverride, ownerPhoneNumber, ownerEmail, ownerType, address, frontDeskPhone, about, tc, facilities, adminNotes, cancelReason, registrationStatus } = req.body;
     const studio = await depManager.STUDIO.getStudioModel().findById(studioID);
 
     if(!studio){
@@ -164,6 +164,12 @@ async function update(req, res) {
     }
     if(address){
       studio.address = address;
+    }
+    if(frontDeskPhoneVerified){
+      studio.frontDeskPhoneVerified = frontDeskPhoneVerified;
+    }
+    if(ownerPhoneNumberVerified){
+      studio.ownerPhoneNumberVerified = ownerPhoneNumberVerified;
     }
     if(frontDeskPhone){
       studio.frontDeskPhone = frontDeskPhone;

@@ -57,6 +57,10 @@ const studioSchema = new Schema({
     type: String,
     default: null
   },
+  frontDeskPhoneVerified: {
+    type: Boolean,
+    default: false
+  },
   noOfRooms: {
     type: String,
     default: null
@@ -120,6 +124,10 @@ const studioSchema = new Schema({
       },
       message: (props) => `${props.value} is not a valid phone number!`
     }
+  },
+  ownerPhoneNumberVerified: {
+    type: Boolean,
+    default: false
   },
   address: {
     type: Schema.Types.ObjectId,
