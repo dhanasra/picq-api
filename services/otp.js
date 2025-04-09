@@ -4,7 +4,7 @@ const { sendSms } = require("../core/utils");
 
 async function sendOtp(req, res) {
   try {
-    const { phoneNumber } = req.body;
+    let { phoneNumber } = req.body;
 
     phoneNumber = phoneNumber.replace(/\D/g, '');
 
@@ -37,7 +37,7 @@ async function sendOtp(req, res) {
 
 async function verifyOtp(req, res) {
   try {
-    const { phoneNumber, code } = req.body;
+    let { phoneNumber, code } = req.body;
 
     phoneNumber = phoneNumber.replace(/\D/g, '');
 
