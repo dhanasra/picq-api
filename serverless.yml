@@ -158,3 +158,14 @@ functions:
           path: /studio/{studioId}/room/{roomId}
           method: DELETE
           cors: true
+  otp:
+    handler: ./handlers/otp.handler
+    events:
+      - http:
+          path: /send_otp
+          method: POST
+          cors: true
+      - http:
+          path: /verify_otp
+          method: POST
+          cors: true
