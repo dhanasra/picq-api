@@ -165,10 +165,10 @@ async function update(req, res) {
     if(address){
       studio.address = address;
     }
-    if(frontDeskPhoneVerified){
+    if(frontDeskPhoneVerified!=null){
       studio.frontDeskPhoneVerified = frontDeskPhoneVerified;
     }
-    if(ownerPhoneNumberVerified){
+    if(ownerPhoneNumberVerified!=null){
       studio.ownerPhoneNumberVerified = ownerPhoneNumberVerified;
     }
     if(frontDeskPhone){

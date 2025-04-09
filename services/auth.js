@@ -117,10 +117,10 @@ async function onboarding(req, res){
     if(studioName){
       studio.studioName = studioName;
     }
-    if(frontDeskPhoneVerified){
+    if(frontDeskPhoneVerified!=null){
       studio.frontDeskPhoneVerified = frontDeskPhoneVerified;
     }
-    if(ownerPhoneNumberVerified){
+    if(ownerPhoneNumberVerified!=null){
       studio.ownerPhoneNumberVerified = ownerPhoneNumberVerified;
     }
     if(address){
