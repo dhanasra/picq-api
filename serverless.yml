@@ -14,6 +14,8 @@ provider:
     ORIGIN_WHITELIST: ${file(./config/config.${self:custom.currentStage}.json):ORIGIN_WHITELIST}
     MONGO_DB_URL: ${file(./config/config.${self:custom.currentStage}.json):MONGO_DB_URL}
     S3_BUCKET_NAME: ${file(./config/config.${self:custom.currentStage}.json):S3_BUCKET_NAME}
+    PLIVO_AUTH_ID: ${file(./config/config.${self:custom.currentStage}.json):PLIVO_AUTH_ID}
+    PLIVO_AUTH_TOKEN: ${file(./config/config.${self:custom.currentStage}.json):PLIVO_AUTH_TOKEN}
 
   iamRoleStatements:
     - Effect: "Allow"

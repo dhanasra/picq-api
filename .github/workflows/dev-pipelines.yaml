@@ -16,7 +16,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-      # - run: aws s3 cp s3://clans-environment/dev/config.dev.json config/
+      - run: aws s3 cp s3://picq-env/config.dev.json config/
       - run: npm cache clean --force
       - run: sudo npm install -g n
       - run: sudo n 18.17.0
