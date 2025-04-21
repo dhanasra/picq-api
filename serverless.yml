@@ -61,8 +61,23 @@ functions:
           method: POST
           cors: true
       - http:
+          path: /auth_otp
+          method: POST
+          cors: true
+      - http:
+          path: /auth_verify
+          method: POST
+          cors: true
+      - http:
           path: /onboarding
           method: POST
+          cors: true
+  user:
+    handler: ./handlers/user.handler
+    events:
+      - http:
+          path: /user
+          method: PUT
           cors: true
   main:
     handler: ./handlers/main.handler

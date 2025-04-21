@@ -8,7 +8,7 @@ async function fetchMainData(req, res){
         const userID = req.userID;
         const roleID = req.roleID;
 
-        if(roleID=='admin'){
+        if(roleID!='studio_owner'){
             const user = await depManager.USER.getUserModel().findById(userID);
 
             if(!user){

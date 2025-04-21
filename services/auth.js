@@ -1,6 +1,7 @@
 const depManager = require("../core/depManager");
 const { hash, checkHash } = require("../core/helper");
 const responser = require("../core/responser");
+const { sendSms } = require("../core/utils");
 const { generateTokens } = require("./token");
 
 async function signin(req, res){
@@ -90,6 +91,93 @@ async function signup(req, res){
     return responser.success(res, { accessToken, displayName, roleID: user.roleID }, "AUTH_S002");
   }catch(e){
     console.log(e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
+async function authOtp(req, res) {
+  try {
+    let { phoneNumber } = req.body;
+
+    phoneNumber = phoneNumber.replace(/\D/g, '');
+
+    if (phoneNumber.length === 12 && phoneNumber.startsWith("91")) {
+      phoneNumber = `${phoneNumber}`;
+    }
+    else if (phoneNumber.length === 10) {
+      phoneNumber = `91${phoneNumber}`;
+    }
+    else {
+      return responser.error(res, "AUTH_E004");
+    }
+
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+
+    await Promise.all([
+        depManager.OTP.getOtpModel().create({
+            phoneNumber, code, expiresAt
+        }),
+        sendSms({ phoneNumber, otp: code })
+    ])
+
+    return responser.success(res, true, "AUTH_S004");
+  }catch(e){
+    console.log(e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
+async function authVerify(req, res) {
+  try {
+    let { phoneNumber, code } = req.body;
+
+    phoneNumber = phoneNumber.replace(/\D/g, '');
+
+    if (phoneNumber.length === 12 && phoneNumber.startsWith("91")) {
+      phoneNumber = `${phoneNumber}`;
+    }
+    else if (phoneNumber.length === 10) {
+      phoneNumber = `91${phoneNumber}`;
+    }
+    else {
+      return responser.error(res, "AUTH_E006");
+    }
+
+    const otpRecord = await depManager.OTP.getOtpModel().findOne({ phoneNumber, code, verified: false });
+
+    if (!otpRecord) {
+        return responser.error(res, "AUTH_E004");
+    }
+
+    if (otpRecord.expiresAt < new Date()) {
+        return responser.error(res, "AUTH_E005");
+    }
+    
+    otpRecord.verified = true;
+    await otpRecord.save();
+
+    const userRecord = await depManager.USER.getUserModel().findOne({ phoneNumber });  
+
+    let accessToken;
+    if(userRecord){
+      accessToken = generateTokens({
+        userID: userRecord._id,
+        roleID: userRecord.roleID
+      });
+    } else {
+      const user = await depManager.USER.getUserModel().create({
+        phoneNumber, loginType: "phone", roleID: "user"
+      })
+      accessToken = generateTokens({
+        userID: user._id,
+        roleID: user.roleID
+      });
+    }
+
+    return responser.success(res, accessToken, "AUTH_S005");
+  }catch(e){
+    console.error(e);
     return responser.error(res, "GLOBAL_E001");
   }
 }
@@ -208,5 +296,7 @@ async function onboarding(req, res){
 module.exports = {
   signin,
   signup,
+  authOtp,
+  authVerify,
   onboarding
 }

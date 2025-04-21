@@ -58,12 +58,6 @@ const userSchema = new Schema({
   phoneNumber: {
     type: String,
     default: null,
-    validate: {
-      validator: function (v) {
-        return v === null || /^\+?[0-9]{10,15}$/.test(v);
-      },
-      message: (props) => `${props.value} is not a valid phone number!`
-    }
   },
   isVerified: {
     type: Boolean,
