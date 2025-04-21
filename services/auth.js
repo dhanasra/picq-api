@@ -160,11 +160,13 @@ async function authVerify(req, res) {
     const userRecord = await depManager.USER.getUserModel().findOne({ phoneNumber });  
 
     let accessToken;
+    let displayName = null;
     if(userRecord){
       accessToken = generateTokens({
         userID: userRecord._id,
         roleID: userRecord.roleID
       });
+      displayName = `${userRecord.firstName} ${userRecord.lastName}`
     } else {
       const user = await depManager.USER.getUserModel().create({
         phoneNumber, loginType: "phone", roleID: "user"
@@ -175,7 +177,7 @@ async function authVerify(req, res) {
       });
     }
 
-    return responser.success(res, accessToken, "AUTH_S005");
+    return responser.success(res, { accessToken, displayName, roleID: "user" }, "AUTH_S005");
   }catch(e){
     console.error(e);
     return responser.error(res, "GLOBAL_E001");
