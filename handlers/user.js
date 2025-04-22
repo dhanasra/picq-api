@@ -19,6 +19,7 @@ app.use(cors_origin());
 app.use(validateAccessToken);
 
 app.put("/user", processHandler(service.update))
+app.put("/favourite", processHandler(service.updateFavourite))
 
 module.exports.handler = serverless(app, {
     callbackWaitsForEmptyEventLoop: false

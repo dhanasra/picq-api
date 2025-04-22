@@ -79,6 +79,10 @@ functions:
           path: /user
           method: PUT
           cors: true
+      - http:
+          path: /favourite
+          method: PUT
+          cors: true
   main:
     handler: ./handlers/main.handler
     events:

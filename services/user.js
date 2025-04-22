@@ -22,7 +22,7 @@ async function update(req, res) {
     const user = await depManager.USER.getUserModel().findById(userID);
 
     if (!user) {
-      return responser.error(res, "USER_E002");
+      return responser.error(res, "USER_E001");
     }
 
     if (firstName) user.firstName = firstName;
@@ -41,7 +41,37 @@ async function update(req, res) {
 
     await user.save();
 
-    return responser.success(res, user, "USER_S003");
+    return responser.success(res, user, "USER_S001");
+  } catch (e) {
+    console.error(e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
+
+async function updateFavourite(req, res) {
+  try {
+    const { userID } = req; 
+    const { studioID, isFavourite } = req.body;
+
+    const user = await depManager.USER.getUserModel().findById(userID);
+
+    if (!user) {
+      return responser.error(res, "USER_E001");
+    }
+
+    if (isFavourite) {
+      if (!user.favourites.includes(studioID)) {
+        user.favourites.push(studioID);
+      }
+    } 
+    else {
+      user.favourites = user.favourites.filter(fav => fav.toString() !== studioID);
+    }
+
+    await user.save();
+
+    return responser.success(res, user, "USER_S002");
   } catch (e) {
     console.error(e);
     return responser.error(res, "GLOBAL_E001");
@@ -50,5 +80,6 @@ async function update(req, res) {
 
 
 module.exports ={
-    update
+    update,
+    updateFavourite
 }

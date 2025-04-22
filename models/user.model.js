@@ -96,6 +96,10 @@ const userSchema = new Schema({
       default: null
     }
   },
+  favourites: {
+    type: [String],
+    default: []
+  },
   loginType: {
     type: String,
     enum: ["phone", "google", "password", "offline"],

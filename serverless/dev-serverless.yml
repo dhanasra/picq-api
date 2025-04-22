@@ -86,6 +86,10 @@ functions:
           path: /user
           method: PUT
           cors: true
+      - http:
+          path: /favourite
+          method: PUT
+          cors: true
   address:
     handler: ./handlers/address.handler
     events:

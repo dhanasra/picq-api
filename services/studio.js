@@ -2,6 +2,140 @@ const depManager = require("../core/depManager");
 const responser = require("../core/responser");
 const { ObjectId } = require("mongodb");
 
+async function search(req, res) {
+  try {
+    const { query, minPrice, maxPrice, page = 1, limit = 10 } = req.query;
+    const { status, category, facilities, services } = req.body;
+
+    const parsedPage = Math.max(parseInt(page) || 1, 1);
+    const parsedLimit = Math.max(parseInt(limit) || 10, 1);
+
+    // ---------- Top-level Studio Filter ----------
+    const filter = {};
+    if (status) {
+      filter.registrationStatus = status;
+    }
+    if (query) {
+      filter.studioName = { $regex: query, $options: "i" };
+    }
+    if (facilities) {
+      const facilitiesArray = Array.isArray(facilities) ? facilities : [facilities];
+      filter.facilities = { $all: facilitiesArray };
+    }
+
+    // ---------- Room-Level Filter ----------
+    const matchRoomsConditions = [];
+
+    if (category) {
+      matchRoomsConditions.push({ $eq: ["$$room.category", category] });
+    }
+
+    if (services) {
+      const serviceArray = Array.isArray(services) ? services : [services];
+      matchRoomsConditions.push({ $setIsSubset: [serviceArray, "$$room.services"] });
+    }
+
+    const priceRangeCond = [];
+    const min = parseFloat(minPrice);
+    const max = parseFloat(maxPrice);
+
+    if (!isNaN(min)) {
+      priceRangeCond.push({ $gte: ["$$room.price", min] });
+    }
+
+    if (!isNaN(max)) {
+      priceRangeCond.push({ $lte: ["$$room.price", max] });
+    }
+
+    if (priceRangeCond.length) {
+      matchRoomsConditions.push({ $and: priceRangeCond });
+    }
+
+    const filterRoomsStage = {
+      $addFields: {
+        filteredRooms: {
+          $filter: {
+            input: "$rooms",
+            as: "room",
+            cond: {
+              $and: matchRoomsConditions.length ? matchRoomsConditions : [{ $const: true }]
+            }
+          }
+        }
+      }
+    };
+
+    const nonEmptyFilteredRoomsMatch = {
+      $match: {
+        $expr: {
+          $gt: [{ $size: "$filteredRooms" }, 0]
+        }
+      }
+    };
+
+    const lookups = [
+      {
+        $lookup: {
+          from: "Addresses",
+          localField: "address",
+          foreignField: "_id",
+          as: "address"
+        }
+      },
+      {
+        $lookup: {
+          from: "Documents",
+          localField: "documents",
+          foreignField: "_id",
+          as: "documents"
+        }
+      },
+      {
+        $lookup: {
+          from: "Users",
+          localField: "owner",
+          foreignField: "_id",
+          as: "owner"
+        }
+      },
+      { $unwind: { path: "$address", preserveNullAndEmptyArrays: true } },
+      { $unwind: { path: "$documents", preserveNullAndEmptyArrays: true } },
+      { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+    ];
+
+    // ---------- Aggregation Pipelines ----------
+    const totalCountPromise = depManager.STUDIO.getStudioModel().aggregate([
+      { $match: filter },
+      filterRoomsStage,
+      nonEmptyFilteredRoomsMatch,
+      { $count: "totalCount" }
+    ]);
+
+    const studiosPromise = depManager.STUDIO.getStudioModel().aggregate([
+      { $match: filter },
+      filterRoomsStage,
+      nonEmptyFilteredRoomsMatch,
+      ...lookups,
+      { $sort: { createdAt: -1 } },
+      { $skip: (parsedPage - 1) * parsedLimit },
+      { $limit: parsedLimit },
+    ]);
+
+    // ---------- Final Response ----------
+    const [totalCountResult, studios] = await Promise.all([
+      totalCountPromise,
+      studiosPromise,
+    ]);
+    const total = totalCountResult[0]?.totalCount || 0;
+
+    return responser.success(res, { studios, total }, "STUDIO_S001");
+
+  } catch (e) {
+    console.error(e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
 async function paginate(req, res) {
   try {
 
@@ -309,6 +443,7 @@ async function deleteRoom(req, res) {
 
 
 module.exports = {
+  search,
   paginate,
   details,
   update,
