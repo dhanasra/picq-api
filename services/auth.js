@@ -133,59 +133,73 @@ async function authVerify(req, res) {
   try {
     let { phoneNumber, code } = req.body;
 
+    // Remove non-digit characters from phone number
     phoneNumber = phoneNumber.replace(/\D/g, '');
 
+    // Normalize phone number format
     if (phoneNumber.length === 12 && phoneNumber.startsWith("91")) {
       phoneNumber = `${phoneNumber}`;
-    }
-    else if (phoneNumber.length === 10) {
+    } else if (phoneNumber.length === 10) {
       phoneNumber = `91${phoneNumber}`;
-    }
-    else {
+    } else {
       return responser.error(res, "AUTH_E006");
     }
 
-    if(phoneNumber!="918056384773"){
-      const otpRecord = await depManager.OTP.getOtpModel().findOne({ phoneNumber, code, verified: false });
+    // Skip OTP verification for specific number
+    if (phoneNumber !== "918056384773") {
+      const otpRecord = await depManager.OTP.getOtpModel().findOne({
+        phoneNumber,
+        code,
+        verified: false
+      });
 
       if (!otpRecord) {
-          return responser.error(res, "AUTH_E004");
+        return responser.error(res, "AUTH_E004");
       }
-  
+
       if (otpRecord.expiresAt < new Date()) {
-          return responser.error(res, "AUTH_E005");
+        return responser.error(res, "AUTH_E005");
       }
-      
+
       otpRecord.verified = true;
       await otpRecord.save();
     }
 
-    const userRecord = await depManager.USER.getUserModel().findOne({ phoneNumber });  
+    // Find or create user
+    const userRecord = await depManager.USER.getUserModel().findOne({ phoneNumber });
 
-    let accessToken;
+    let token;
     let displayName = null;
-    if(userRecord){
-      accessToken = generateTokens({
+
+    if (userRecord) {
+      token = generateTokens({
         userID: userRecord._id,
         roleID: userRecord.roleID
       });
-      displayName = `${userRecord.firstName} ${userRecord.lastName}`
+      displayName = userRecord.firstName != null
+        ? `${userRecord.firstName ?? ''} ${userRecord.lastName ?? ''}`.trim()
+        : null;
     } else {
-      const user = await depManager.USER.getUserModel().create({
-        phoneNumber, loginType: "phone", roleID: "user"
-      })
-      accessToken = generateTokens({
-        userID: user._id,
-        roleID: user.roleID
+      const newUser = await depManager.USER.getUserModel().create({
+        phoneNumber,
+        loginType: "phone",
+        roleID: "user"
+      });
+
+      token = generateTokens({
+        userID: newUser._id,
+        roleID: newUser.roleID
       });
     }
 
-    return responser.success(res, { accessToken, displayName, roleID: "user" }, "AUTH_S005");
-  }catch(e){
+    return responser.success(res, { token, displayName, roleID: "user" }, "AUTH_S005");
+
+  } catch (e) {
     console.error(e);
     return responser.error(res, "GLOBAL_E001");
   }
 }
+
 
 
 async function onboarding(req, res){
