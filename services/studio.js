@@ -295,14 +295,6 @@ async function details(req, res) {
       {
         $match: { _id: new ObjectId(studioID) }
       },
-      { 
-          $lookup: {
-              from: "Addresses",
-              localField: "address",
-              foreignField: "_id",
-              as: "address"
-          }
-      },
       ...lookups
     ]);
 
