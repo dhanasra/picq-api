@@ -204,14 +204,15 @@ async function fetchFavourites(req, res) {
     const { page = 1, limit = 10 } = req.query;
 
     const favIds = (await depManager.USER.getUserModel().findById(userID))?.favourites || [];
-
+    const objectIdFavs = favIds.map(id => new ObjectId(id));
+    
     const totalCountPromise = depManager.STUDIO.getStudioModel().aggregate([
-      { $match: { _id: { $in: favIds } } },
+      { $match: { _id: { $in: objectIdFavs } } },
       { $count: "totalCount" },
     ]);
 
     const studiosPromise = depManager.STUDIO.getStudioModel().aggregate([
-      { $match: { _id: { $in: favIds } } },
+      { $match: { _id: { $in: objectIdFavs } } },
       { 
           $lookup: {
               from: "Addresses",
