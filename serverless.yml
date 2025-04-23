@@ -162,6 +162,10 @@ functions:
           method: POST
           cors: true
       - http:
+          path: /studios/favourites
+          method: GET
+          cors: true
+      - http:
           path: /studio/{studioId}
           method: GET
           cors: true

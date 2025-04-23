@@ -22,6 +22,7 @@ app.put("/studio/:studioId", processHandler(service.update))
 app.get("/studio/:studioId", processHandler(service.details));
 app.get("/studios", processHandler(service.paginate));
 app.post("/studios/search", processHandler(service.search));
+app.get("/studios/favourites", processHandler(service.fetchFavourites));
 app.put("/studio/:studioId/room/:roomId", processHandler(service.updateRoom))
 app.delete("/studio/:studioId/room/:roomId", processHandler(service.deleteRoom))
 app.post("/studio/:studioId/room", processHandler(service.createRoom))

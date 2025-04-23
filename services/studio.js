@@ -82,25 +82,7 @@ async function search(req, res) {
           as: "address"
         }
       },
-      {
-        $lookup: {
-          from: "Documents",
-          localField: "documents",
-          foreignField: "_id",
-          as: "documents"
-        }
-      },
-      {
-        $lookup: {
-          from: "Users",
-          localField: "owner",
-          foreignField: "_id",
-          as: "owner"
-        }
-      },
-      { $unwind: { path: "$address", preserveNullAndEmptyArrays: true } },
-      { $unwind: { path: "$documents", preserveNullAndEmptyArrays: true } },
-      { $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } },
+      { $unwind: { path: "$address", preserveNullAndEmptyArrays: true } }
     ];
 
     // ---------- Aggregation Pipelines ----------
@@ -195,6 +177,51 @@ async function paginate(req, res) {
       },
       { 
           $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } 
+      },
+      { $sort: { createdAt: -1 } },
+      { $skip: (page - 1) * limit },
+      { $limit: parseInt(limit) },
+    ]);
+
+    const [totalCountResult, studios] = await Promise.all([
+      totalCountPromise,
+      studiosPromise,
+    ]);
+    const total = totalCountResult[0]?.totalCount || 0;
+
+    return responser.success(res, { studios, total }, "STUDIO_S001");
+  }catch(e){
+    console.error(e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
+
+async function fetchFavourites(req, res) {
+  try {
+
+    const { userID } = req;
+    const { page = 1, limit = 10 } = req.query;
+
+    const favIds = (await depManager.USER.getUserModel().findById(userID))?.favourites || [];
+
+    const totalCountPromise = depManager.STUDIO.getStudioModel().aggregate([
+      { $match: { _id: { $in: favIds } } },
+      { $count: "totalCount" },
+    ]);
+
+    const studiosPromise = depManager.STUDIO.getStudioModel().aggregate([
+      { $match: { _id: { $in: favIds } } },
+      { 
+          $lookup: {
+              from: "Addresses",
+              localField: "address",
+              foreignField: "_id",
+              as: "address"
+          }
+      },
+      { 
+          $unwind: { path: "$address", preserveNullAndEmptyArrays: true } 
       },
       { $sort: { createdAt: -1 } },
       { $skip: (page - 1) * limit },
@@ -449,5 +476,6 @@ module.exports = {
   update,
   createRoom,
   updateRoom,
-  deleteRoom
+  deleteRoom,
+  fetchFavourites
 }
