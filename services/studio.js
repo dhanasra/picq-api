@@ -205,7 +205,7 @@ async function fetchFavourites(req, res) {
 
     const favIds = (await depManager.USER.getUserModel().findById(userID))?.favourites || [];
     const objectIdFavs = favIds.map(id => new ObjectId(id));
-    
+
     const totalCountPromise = depManager.STUDIO.getStudioModel().aggregate([
       { $match: { _id: { $in: objectIdFavs } } },
       { $count: "totalCount" },
@@ -249,8 +249,46 @@ async function details(req, res) {
 
     const { userID, roleID } = req;
 
+    var lookups = [
+      { 
+        $lookup: {
+            from: "Addresses",
+            localField: "address",
+            foreignField: "_id",
+            as: "address"
+        }
+      },
+      { 
+        $unwind: { path: "$address", preserveNullAndEmptyArrays: true } 
+      },
+    ]
+
     if(roleID!='admin' && roleID!='studio_owner'){
-      return responser.error(res, "STUDIO_E001");
+      lookups = [
+        ...lookups,
+        { 
+          $lookup: {
+              from: "Documents",
+              localField: "documents",
+              foreignField: "_id",
+              as: "documents"
+          }
+        },
+        { 
+          $lookup: {
+              from: "Users",
+              localField: "owner",
+              foreignField: "_id",
+              as: "owner"
+          }
+        },
+        { 
+          $unwind: { path: "$documents", preserveNullAndEmptyArrays: true } 
+        },
+        { 
+            $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } 
+        },
+      ]
     }
 
     const result = await depManager.STUDIO.getStudioModel().aggregate([
@@ -265,31 +303,7 @@ async function details(req, res) {
               as: "address"
           }
       },
-      { 
-          $lookup: {
-              from: "Documents",
-              localField: "documents",
-              foreignField: "_id",
-              as: "documents"
-          }
-      },
-      { 
-        $lookup: {
-            from: "Users",
-            localField: "owner",
-            foreignField: "_id",
-            as: "owner"
-        }
-      },
-      { 
-          $unwind: { path: "$address", preserveNullAndEmptyArrays: true } 
-      },
-      { 
-          $unwind: { path: "$documents", preserveNullAndEmptyArrays: true } 
-      },
-      { 
-          $unwind: { path: "$owner", preserveNullAndEmptyArrays: true } 
-      },
+      ...lookups
     ]);
 
     if(!result || result.length==0){
