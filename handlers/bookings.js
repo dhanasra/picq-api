@@ -23,6 +23,8 @@ app.put("/bookings/offline/:id", processHandler(service.updateOffline))
 app.get("/bookings/:id", processHandler(service.getBooking));
 app.get("/bookings", processHandler(service.paginate));
 
+app.post("/bookings", processHandler(service.create))
+
 module.exports.handler = serverless(app, {
     callbackWaitsForEmptyEventLoop: false
 });

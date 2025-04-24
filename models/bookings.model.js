@@ -12,17 +12,13 @@ const _bookingsSchema = new Schema({
     ref: 'Studios', 
     required: true 
   },
+  roomID: { 
+    type: Schema.Types.ObjectId, 
+    default: null 
+  },
   paymentID: { 
     type: Schema.Types.ObjectId, 
     ref: 'Payments', 
-    default: null,
-  },
-  category: { 
-    type: String, 
-    default: null,
-  },
-  service: { 
-    type: String, 
     default: null,
   },
   bookingType: { 
@@ -33,10 +29,6 @@ const _bookingsSchema = new Schema({
   dateTime: { 
     type: Date, 
     required: true 
-  },
-  room: { 
-    type: String, 
-    default: null 
   },
   endDateTime: { 
     type: Date,
@@ -55,6 +47,15 @@ const _bookingsSchema = new Schema({
     type: Number, 
     required: true, 
     min: 0 
+  },
+  total: { 
+    type: Number, 
+    required: true, 
+    min: 0 
+  },
+  extras: { 
+    type: Object, 
+    default: []
   },
   paymentDetails: {
     status: { 
@@ -90,6 +91,11 @@ const _bookingsSchema = new Schema({
     default: null 
   },
   cancellationReason: { 
+    type: String,
+    default: null 
+  },
+  cancelledBy: { 
+    enum: ['admin', 'owner', 'user'],
     type: String,
     default: null 
   },

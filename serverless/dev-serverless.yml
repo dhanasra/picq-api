@@ -135,6 +135,10 @@ functions:
     handler: ./handlers/bookings.handler
     events:
       - http:
+          path: /bookings
+          method: POST
+          cors: true
+      - http:
           path: /bookings/offline
           method: POST
           cors: true

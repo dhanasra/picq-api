@@ -257,9 +257,64 @@ async function getBooking(req, res) {
   }
 }
 
+
+async function create(req, res) {
+  try {
+
+    const { userID } = req;
+
+    const {
+      studioID,
+      roomID,
+      dateTime,
+      endDateTime,
+      duration,
+      amount,
+      total,
+      extras,
+      paymentMethod,
+      paymentStatus,
+      partialPayment,
+      notes,
+    } = req.body;
+
+    // Prepare booking data
+    const bookingData = {
+      userID,
+      studioID,
+      roomID,
+      dateTime,
+      endDateTime,
+      duration,
+      amount,
+      total,
+      extras,
+      status: "pending",
+      paymentDetails: {
+        status: paymentStatus,
+        paymentMethod: paymentMethod,
+        partialPayment: partialPayment
+      },
+      notes,
+      createdAt: Date.now(),
+    };
+
+    // Create booking
+    const booking = await depManager.BOOKINGS.getBookingsModel().create(
+      bookingData
+    );
+
+    return responser.success(res, booking, "BOOKINGS_S001");
+  } catch (e) {
+    console.error("Error in createOffline:", e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
 module.exports = { 
   createOffline,
   updateOffline,
   paginate ,
-  getBooking
+  getBooking,
+  create
 };
