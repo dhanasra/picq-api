@@ -160,7 +160,7 @@ async function paginate(req, res) {
       filter.studioID = new ObjectId(studioID);
     }
     if (status) {
-      filter.status = status;
+      filter.status = status=='upcoming' ? { $in: ['pending', 'confirmed'] } : status;
     }
 
     const totalCountPromise = depManager.BOOKINGS.getBookingsModel().aggregate([
