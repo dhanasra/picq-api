@@ -196,6 +196,60 @@ async function paginate(req, res) {
   }
 }
 
+async function fetchFeatured(req, res) {
+  try {
+
+    const featured = await depManager.STUDIO.getStudioModel().aggregate([
+      { $match: { featured: true }},
+      { 
+          $lookup: {
+              from: "Addresses",
+              localField: "address",
+              foreignField: "_id",
+              as: "address"
+          }
+      },
+      { 
+          $unwind: { path: "$address", preserveNullAndEmptyArrays: true } 
+      },
+      { $sort: { priority: -1, createdAt: -1 } }
+    ]);
+
+    return responser.success(res, featured, "STUDIO_S001");
+  }catch(e){
+    console.error(e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
+async function fetchMostRated(req, res) {
+  try {
+    const { page = 1, limit = 10 } = req.query;
+
+    const featured = await depManager.STUDIO.getStudioModel().aggregate([
+      { 
+          $lookup: {
+              from: "Addresses",
+              localField: "address",
+              foreignField: "_id",
+              as: "address"
+          }
+      },
+      { 
+          $unwind: { path: "$address", preserveNullAndEmptyArrays: true } 
+      },
+      { $sort: { ratings: -1, reviewsCount: -1, createdAt: -1 } },
+      { $skip: (page - 1) * limit },
+      { $limit: parseInt(limit) },
+    ]);
+
+    return responser.success(res, featured, "STUDIO_S001");
+  }catch(e){
+    console.error(e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
 
 async function fetchFavourites(req, res) {
   try {
@@ -320,11 +374,20 @@ async function update(req, res) {
       return responser.error(res, "STUDIO_E001");
     }
 
-    const { studioName, email, documents, noOfRooms, frontDeskPhoneVerified, ownerPhoneNumberVerified, rooms, operationalHours, openDays, closedDaysOverride, openDaysOverride, ownerPhoneNumber, ownerEmail, ownerType, address, frontDeskPhone, about, tc, facilities, adminNotes, cancelReason, registrationStatus } = req.body;
+    const { studioName, email, documents, noOfRooms, featured, priority, frontDeskPhoneVerified, ownerPhoneNumberVerified, rooms, operationalHours, openDays, closedDaysOverride, openDaysOverride, ownerPhoneNumber, ownerEmail, ownerType, address, frontDeskPhone, about, tc, facilities, adminNotes, cancelReason, registrationStatus } = req.body;
     const studio = await depManager.STUDIO.getStudioModel().findById(studioID);
 
     if(!studio){
       return responser.error(res, "STUDIO_E002");
+    }
+
+    if(roleID=='admin'){
+      if(featured!=null){
+        studio.featured = featured;
+      }
+      if(priority!=null){
+        studio.priority = priority;
+      }
     }
 
     if(studioName){
@@ -484,5 +547,7 @@ module.exports = {
   createRoom,
   updateRoom,
   deleteRoom,
-  fetchFavourites
+  fetchFavourites,
+  fetchFeatured,
+  fetchMostRated
 }

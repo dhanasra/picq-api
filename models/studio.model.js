@@ -193,6 +193,24 @@ const studioSchema = new Schema({
     enum: ["pending", "completed", "awaiting_approval", "approved", "paused", "rejected", "invited"],
     default: "pending"
   },
+
+  featured: {
+    type: Boolean,
+    default: false
+  },
+  priority: {
+    type: Number,
+    default: null
+  },
+  ratings: {
+    type: Number,
+    default: 4.5
+  },
+  reviewsCount: {
+    type: Number,
+    default: 25
+  },
+
   createdBy: {
     type: Schema.Types.ObjectId,
     ref: "Users",
