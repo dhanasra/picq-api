@@ -233,6 +233,9 @@ async function getBooking(req, res) {
           from: "Studios",
           localField: "studioID",
           foreignField: "_id",
+          pipeline: [
+            { $project: { _id: 1, studioName: 1 } }
+          ],
           as: "studio",
         },
       },
