@@ -198,11 +198,11 @@ functions:
           method: DELETE
           cors: true
       - http:
-          path: /studio/:studioId/review
+          path: /studio/{studioId}/review
           method: POST
           cors: true
       - http:
-          path: /studio/:studioId/review
+          path: /studio/{studioId}/review
           method: GET
           cors: true
   otp:

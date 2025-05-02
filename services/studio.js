@@ -555,8 +555,8 @@ async function addReview(req, res) {
 
     // Create the review
     await depManager.REVIEWS.getStudioReviewsModel().create({
-      studio: studioID,
-      user: userID,
+      studioID: studioID,
+      userID: userID,
       username: `${user.firstName} ${user.lastName}`,
       picture: user.picture,
       rating,
@@ -602,20 +602,20 @@ async function getReviews(req, res) {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
-    const filer = { studioID, userID };
+    const filter = { studioID };
 
     if(mine){
-      filer['userID'] = userID;
+      filter.userID = userID;
     }
 
     const [reviews, totalCount] = await Promise.all([
       depManager.REVIEWS.getStudioReviewsModel()
-        .find( filer )
+        .find(filter)
         .sort({ createdAt: -1 })
         .skip((page - 1) * limit)
         .limit(limit)
         .lean(),
-      depManager.REVIEWS.getStudioReviewsModel().countDocuments({ studio: studioID })
+      depManager.REVIEWS.getStudioReviewsModel().countDocuments(filter)
     ]);
 
     return responser.success(res, {
