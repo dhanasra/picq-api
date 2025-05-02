@@ -20,6 +20,7 @@ app.use(validateAccessToken);
 
 app.put("/user", processHandler(service.update))
 app.put("/favourite", processHandler(service.updateFavourite))
+app.get("/user/reviews", processHandler(service.getReviews))
 
 module.exports.handler = serverless(app, {
     callbackWaitsForEmptyEventLoop: false

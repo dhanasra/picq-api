@@ -90,6 +90,10 @@ functions:
           path: /favourite
           method: PUT
           cors: true
+      - http:
+          path: /user/reviews
+          method: GET
+          cors: true
   address:
     handler: ./handlers/address.handler
     events:

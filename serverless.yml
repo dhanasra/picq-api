@@ -83,6 +83,10 @@ functions:
           path: /favourite
           method: PUT
           cors: true
+      - http:
+          path: /user/reviews
+          method: GET
+          cors: true
   main:
     handler: ./handlers/main.handler
     events:

@@ -1,5 +1,6 @@
 const depManager = require("../core/depManager");
 const responser = require("../core/responser");
+const { ObjectId } = require("mongodb");
 
 async function update(req, res) {
   try {
@@ -79,7 +80,50 @@ async function updateFavourite(req, res) {
 }
 
 
+async function getReviews(req, res) {
+  try {
+    const userID = req.userID;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const ReviewModel = depManager.REVIEWS.getStudioReviewsModel();
+
+    const [results, totalCount] = await Promise.all([
+      ReviewModel.aggregate([
+        { $match: { userID: new ObjectId(userID) } },
+        { $sort: { createdAt: -1 } },
+        {
+          $lookup: {
+            from: "Studios",
+            localField: "studioID",
+            foreignField: "_id",
+            pipeline: [
+              { $project: { _id: 1, studioName: 1 } }
+            ],
+            as: "studio"
+          }
+        },
+        { $unwind: "$studio" },
+        { $skip: (page - 1) * limit },
+        { $limit: limit }
+      ]),
+      ReviewModel.countDocuments({ userID })
+    ]);
+
+    return responser.success(res, {
+      reviews: results,
+      totalCount,
+      currentPage: page,
+      totalPages: Math.ceil(totalCount / limit)
+    }, "STUDIO_S006");
+  } catch (e) {
+    console.error(e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
 module.exports ={
     update,
-    updateFavourite
+    updateFavourite,
+    getReviews
 }

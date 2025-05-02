@@ -594,19 +594,12 @@ async function addReview(req, res) {
 async function getReviews(req, res) {
   try {
 
-    const userID = req.userID;
     const studioID = req.params.studioId;
-
-    const mine = req.query.mine;
 
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
 
     const filter = { studioID };
-
-    if(mine){
-      filter.userID = userID;
-    }
 
     const [reviews, totalCount] = await Promise.all([
       depManager.REVIEWS.getStudioReviewsModel()
