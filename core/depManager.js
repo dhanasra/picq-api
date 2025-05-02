@@ -5,6 +5,7 @@ const STUDIO = require("../models/studio.model");
 const DOCUMENTS = require("../models/documents.model");
 const BOOKINGS = require("../models/bookings.model");
 const OTP = require("../models/otp.model");
+const REVIEWS = require("../models/reviews.model");
 
 const depManager = {
   USER,
@@ -12,7 +13,8 @@ const depManager = {
   STUDIO,
   DOCUMENTS,
   BOOKINGS,
-  OTP
+  OTP,
+  REVIEWS
 };
 
 module.exports = depManager;

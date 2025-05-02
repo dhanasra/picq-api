@@ -197,6 +197,14 @@ functions:
           path: /studio/{studioId}/room/{roomId}
           method: DELETE
           cors: true
+      - http:
+          path: /studio/:studioId/review
+          method: POST
+          cors: true
+      - http:
+          path: /studio/:studioId/review
+          method: GET
+          cors: true
   otp:
     handler: ./handlers/otp.handler
     events:

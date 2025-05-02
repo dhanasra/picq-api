@@ -538,6 +538,87 @@ async function deleteRoom(req, res) {
   }
 }
 
+async function addReview(req, res) {
+  try {
+    const studioID = req.params.studioId;
+    const { userID } = req;
+    const { rating, review } = req.body;
+
+    const [user, studio] = await Promise.all([
+      depManager.USER.getUserModel().findById(userID).lean(),
+      depManager.STUDIO.getStudioModel().findById(studioID).lean()
+    ]);
+
+    if (!user || !studio) {
+      return responser.error(res, "GLOBAL_E001");
+    }
+
+    // Create the review
+    await depManager.REVIEWS.getStudioReviewsModel().create({
+      studio: studioID,
+      user: userID,
+      username: `${user.firstName} ${user.lastName}`,
+      picture: user.picture,
+      rating,
+      review,
+      createdAt: Date.now()
+    });
+
+    // Compute new average rating
+    const oldRating = studio.ratings || 0;
+    const oldCount = studio.reviewsCount || 0;
+
+    const newCount = oldCount + 1;
+    const newAvg = ((oldRating * oldCount) + rating) / newCount;
+
+    // Update studio
+    const updatedStudio = await depManager.STUDIO.getStudioModel().findByIdAndUpdate(
+      studioID,
+      {
+        $set: {
+          ratings: parseFloat(newAvg.toFixed(1)),
+          reviewsCount: newCount
+        }
+      },
+      { new: true }
+    );
+
+    return responser.success(res, updatedStudio, "STUDIO_S006");
+  } catch (e) {
+    console.error(e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
+
+async function getReviews(req, res) {
+  try {
+    const studioID = req.params.studioId;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const [reviews, totalCount] = await Promise.all([
+      depManager.REVIEWS.getStudioReviewsModel()
+        .find({ studio: studioID })
+        .sort({ createdAt: -1 })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .lean(),
+      depManager.REVIEWS.getStudioReviewsModel().countDocuments({ studio: studioID })
+    ]);
+
+    return responser.success(res, {
+      reviews,
+      totalCount,
+      currentPage: page,
+      totalPages: Math.ceil(totalCount / limit)
+    }, "STUDIO_S006");
+  } catch (e) {
+    console.error(e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
 
 module.exports = {
   search,
@@ -549,5 +630,7 @@ module.exports = {
   deleteRoom,
   fetchFavourites,
   fetchFeatured,
-  fetchMostRated
+  fetchMostRated,
+  addReview,
+  getReviews
 }
