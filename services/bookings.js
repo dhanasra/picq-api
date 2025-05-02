@@ -212,6 +212,8 @@ async function paginate(req, res) {
 
 async function getBooking(req, res) {
   try {
+    const roleID = req.roleID;
+    const userID = req.userID;
     const bookingID = req.params.id;
 
     const data = await depManager.BOOKINGS.getBookingsModel().aggregate([
@@ -243,8 +245,13 @@ async function getBooking(req, res) {
       { $sort: { createdAt: -1 } }
     ]);
 
+
     if(!data){
       return responser.error(res, "BOOKINGS_E001");
+    }
+
+    if(roleID=='user'){
+      data[0].review = await depManager.REVIEWS.getStudioReviewsModel().findOne({ userID, studioID: data[0].studioID })      
     }
 
     return responser.success(res, data[0], "BOOKINGS_S004");
