@@ -118,8 +118,7 @@ async function authOtp(req, res) {
         depManager.OTP.getOtpModel().create({
             phoneNumber, code, expiresAt
         }),
-        phoneNumber!="918056384773"
-        ? sendSms({ phoneNumber, otp: code }) : null
+        sendSms({ phoneNumber, otp: code })
     ])
 
     return responser.success(res, true, "AUTH_S004");
@@ -146,24 +145,22 @@ async function authVerify(req, res) {
     }
 
     // Skip OTP verification for specific number
-    if (phoneNumber !== "918056384773") {
-      const otpRecord = await depManager.OTP.getOtpModel().findOne({
-        phoneNumber,
-        code,
-        verified: false
-      });
+    const otpRecord = await depManager.OTP.getOtpModel().findOne({
+      phoneNumber,
+      code,
+      verified: false
+    });
 
-      if (!otpRecord) {
-        return responser.error(res, "AUTH_E004");
-      }
-
-      if (otpRecord.expiresAt < new Date()) {
-        return responser.error(res, "AUTH_E005");
-      }
-
-      otpRecord.verified = true;
-      await otpRecord.save();
+    if (!otpRecord) {
+      return responser.error(res, "AUTH_E004");
     }
+
+    if (otpRecord.expiresAt < new Date()) {
+      return responser.error(res, "AUTH_E005");
+    }
+
+    otpRecord.verified = true;
+    await otpRecord.save();
 
     // Find or create user
     const userRecord = await depManager.USER.getUserModel().findOne({ phoneNumber });
