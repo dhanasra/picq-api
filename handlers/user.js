@@ -19,6 +19,7 @@ app.use(cors_origin());
 app.use(validateAccessToken);
 
 app.put("/user", processHandler(service.update))
+app.put("/user/premier", processHandler(service.premiemMember))
 app.put("/favourite", processHandler(service.updateFavourite))
 app.get("/user/reviews", processHandler(service.getReviews))
 

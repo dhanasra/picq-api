@@ -49,6 +49,40 @@ async function update(req, res) {
   }
 }
 
+async function premiemMember(req, res) {
+  try {
+    const { userID } = req;
+    const  { isPremier } = req.body;
+
+    const user = await depManager.USER.getUserModel().findById(userID);
+
+    if (!user) {
+      return responser.error(res, "USER_E001");
+    }
+
+    const startDate = new Date();
+    const expiryDate = new Date();
+    expiryDate.setMonth(expiryDate.getMonth() + 1);
+
+    const membership = {
+      isPremier,
+      tier: 'silver',
+      startDate,
+      expiryDate
+    };
+
+    user.membership = membership;
+    user.updatedAt = Date.now();
+
+    await user.save();
+
+    return responser.success(res, user, "USER_S001");
+  } catch (e) {
+    console.error(e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
 
 async function updateFavourite(req, res) {
   try {
@@ -125,5 +159,6 @@ async function getReviews(req, res) {
 module.exports ={
     update,
     updateFavourite,
+    premiemMember,
     getReviews
 }

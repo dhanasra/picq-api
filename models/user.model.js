@@ -109,6 +109,25 @@ const userSchema = new Schema({
     type: String,
     default: null
   },
+  membership: {
+    isPremier: {
+      type: Boolean,
+      default: false
+    },
+    tier: {
+      type: String,
+      enum: ["silver", "gold", "platinum"],
+      default: null
+    },
+    startDate: {
+      type: Date,
+      default: null
+    },
+    expiryDate: {
+      type: Date,
+      default: null
+    }
+  },
   createdAt: {
     type: Date,
     default: Date.now

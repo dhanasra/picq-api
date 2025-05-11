@@ -87,6 +87,10 @@ functions:
           method: PUT
           cors: true
       - http:
+          path: /user/premier
+          method: PUT
+          cors: true
+      - http:
           path: /favourite
           method: PUT
           cors: true
