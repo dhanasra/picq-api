@@ -2,6 +2,58 @@ const depManager = require("../core/depManager");
 const responser = require("../core/responser");
 const { ObjectId } = require("mongodb");
 
+async function paginate(req, res) {
+  try {
+    const { roleID } = req;
+    if (roleID !== 'admin') {
+      return responser.error(res, "USER_E002");
+    }
+
+    const { page = 1, limit = 10, query, premier } = req.query;
+
+    const filter = {
+      roleID: 'user'
+    };
+
+    if (premier != null) {
+      filter["membership.isPremier"] = premier === 'true'; 
+    }
+
+    if (query) {
+      filter["$or"] = [
+        { firstName: { $regex: query, $options: "i" } },
+        { lastName: { $regex: query, $options: "i" } }
+      ];
+    }
+
+    const userModel = depManager.USER.getUserModel();
+
+    const totalCountPromise = userModel.aggregate([
+      { $match: filter },
+      { $count: "totalCount" },
+    ]);
+
+    const usersPromise = userModel.aggregate([
+      { $match: filter },
+      { $sort: { createdAt: -1 } },
+      { $skip: (page - 1) * parseInt(limit) },
+      { $limit: parseInt(limit) },
+    ]);
+
+    const [totalCountResult, users] = await Promise.all([
+      totalCountPromise,
+      usersPromise,
+    ]);
+
+    const total = totalCountResult[0]?.totalCount || 0;
+
+    return responser.success(res, { users, total }, "USER_S001");
+  } catch (e) {
+    console.error(e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
 async function update(req, res) {
   try {
     const { userID } = req;
@@ -160,5 +212,6 @@ module.exports ={
     update,
     updateFavourite,
     premiemMember,
-    getReviews
+    getReviews,
+    paginate
 }

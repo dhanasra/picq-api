@@ -2,6 +2,7 @@
     "en": {
         "S001": "Account updated successfully!",
         "S002": "Wishlist updated successfully!",
-        "E001": "Account not found"
+        "E001": "Account not found",
+        "E002": "Access Denied"
     }
 }

@@ -76,6 +76,10 @@ functions:
     handler: ./handlers/user.handler
     events:
       - http:
+          path: /users
+          method: GET
+          cors: true
+      - http:
           path: /user
           method: PUT
           cors: true
