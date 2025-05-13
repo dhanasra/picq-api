@@ -2,6 +2,20 @@ const depManager = require("../core/depManager");
 const responser = require("../core/responser");
 const { ObjectId } = require("mongodb");
 
+
+async function details(req, res) {
+  try {
+
+    const { userID } = req.query;
+    const user = await depManager.USER.getUserModel().findById(userID)
+
+    return responser.success(res, user, "USER_S001");
+  } catch (e) {
+    console.error(e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
 async function paginate(req, res) {
   try {
     const { roleID } = req;
@@ -213,5 +227,6 @@ module.exports ={
     updateFavourite,
     premiemMember,
     getReviews,
-    paginate
+    paginate,
+    details
 }

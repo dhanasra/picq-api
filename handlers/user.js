@@ -23,6 +23,7 @@ app.put("/user/premier", processHandler(service.premiemMember))
 app.put("/favourite", processHandler(service.updateFavourite))
 app.get("/user/reviews", processHandler(service.getReviews))
 app.get("/users", processHandler(service.paginate))
+app.get("/user", processHandler(service.details))
 
 module.exports.handler = serverless(app, {
     callbackWaitsForEmptyEventLoop: false
