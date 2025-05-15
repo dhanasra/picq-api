@@ -151,6 +151,8 @@ async function paginate(req, res) {
     const { userID, roleID } = req;
     const { page = 1, limit = 10, query, studioID, status } = req.query;
 
+    const filterUserID = req.query?.userID;
+
     const filter =
       roleID === "admin" || roleID === "studio_owner"
         ? {}
@@ -163,10 +165,15 @@ async function paginate(req, res) {
       filter.status = status=='upcoming' ? { $in: ['pending', 'confirmed'] } : status;
     }
 
+    if(filterUserID){
+      filter.userID = new ObjectId(userID);
+    }
+
     const totalCountPromise = depManager.BOOKINGS.getBookingsModel().aggregate([
       { $match: filter },
       { $count: "totalCount" },
     ]);
+    
 
     const bookingsPromise = depManager.BOOKINGS.getBookingsModel().aggregate([
       { $match: filter },
