@@ -166,8 +166,10 @@ async function paginate(req, res) {
     }
 
     if(filterUserID){
-      filter.userID = new ObjectId(userID);
+      filter.userID = new ObjectId(filterUserID);
     }
+
+    console.log(filter)
 
     const totalCountPromise = depManager.BOOKINGS.getBookingsModel().aggregate([
       { $match: filter },
