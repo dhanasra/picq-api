@@ -101,9 +101,9 @@ async function authOtp(req, res) {
 
     phoneNumber = phoneNumber.replace(/\D/g, '');
 
-    if(phoneNumber=='918056384773' || phoneNumber=='8056384773'){
-      return responser.success(res, true, "AUTH_S004");
-    }
+    // if(phoneNumber=='918056384773' || phoneNumber=='8056384773'){
+    //   return responser.success(res, true, "AUTH_S004");
+    // }
 
     if (phoneNumber.length === 12 && phoneNumber.startsWith("91")) {
       phoneNumber = `${phoneNumber}`;
@@ -148,7 +148,7 @@ async function authVerify(req, res) {
       return responser.error(res, "AUTH_E006");
     }
 
-    if(phoneNumber!='918056384773'){
+    // if(phoneNumber!='918056384773'){
 
       // Skip OTP verification for specific number
       const otpRecord = await depManager.OTP.getOtpModel().findOne({
@@ -167,7 +167,7 @@ async function authVerify(req, res) {
 
       otpRecord.verified = true;
       await otpRecord.save();
-    }
+    // }
 
     // Find or create user
     const userRecord = await depManager.USER.getUserModel().findOne({ phoneNumber });
