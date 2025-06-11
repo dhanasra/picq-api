@@ -106,6 +106,13 @@ functions:
           path: /main
           method: GET
           cors: true
+  token:
+    handler: ./handlers/token.handler
+    events:
+      - http:
+          path: /accessToken
+          method: POST
+          cors: true
   address:
     handler: ./handlers/address.handler
     events:

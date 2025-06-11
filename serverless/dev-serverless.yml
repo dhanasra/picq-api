@@ -72,6 +72,13 @@ functions:
           path: /onboarding
           method: POST
           cors: true
+  token:
+    handler: ./handlers/token.handler
+    events:
+      - http:
+          path: /accessToken
+          method: POST
+          cors: true
   main:
     handler: ./handlers/main.handler
     events:
