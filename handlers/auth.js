@@ -25,6 +25,8 @@ app.post("/signin", processHandler(service.signin))
 app.post("/auth_otp", processHandler(service.authOtp))
 app.post("/auth_verify", processHandler(service.authVerify))
 
+app.post("/auth_google", processHandler(service.authGoogle))
+
 app.use(validateAccessToken);
 
 app.post("/onboarding", processHandler(service.onboarding))

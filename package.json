@@ -26,6 +26,7 @@
     "express-rate-limit": "^7.2.0",
     "express-session": "^1.17.3",
     "fetch": "^1.1.0",
+    "firebase-admin": "^13.4.0",
     "jsonwebtoken": "^9.0.2",
     "mime-types": "^2.1.35",
     "mongoose": "^8.0.3",

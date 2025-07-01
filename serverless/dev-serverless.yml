@@ -16,6 +16,15 @@ provider:
     S3_BUCKET_NAME: ${file(./config/config.${self:custom.currentStage}.json):S3_BUCKET_NAME}
     PLIVO_AUTH_ID: ${file(./config/config.${self:custom.currentStage}.json):PLIVO_AUTH_ID}
     PLIVO_AUTH_TOKEN: ${file(./config/config.${self:custom.currentStage}.json):PLIVO_AUTH_TOKEN}
+    FIREBASE_PROJECT_ID: ${file(./config/config.${self:custom.currentStage}.json):FIREBASE_PROJECT_ID}
+    FIREBASE_PRIVATE_KEY_ID: ${file(./config/config.${self:custom.currentStage}.json):FIREBASE_PRIVATE_KEY_ID}
+    FIREBASE_PRIVATE_KEY: ${file(./config/config.${self:custom.currentStage}.json):FIREBASE_PRIVATE_KEY}
+    FIREBASE_CLIENT_EMAIL: ${file(./config/config.${self:custom.currentStage}.json):FIREBASE_CLIENT_EMAIL}
+    FIREBASE_CLIENT_ID: ${file(./config/config.${self:custom.currentStage}.json):FIREBASE_CLIENT_ID}
+    FIREBASE_AUTH_URI: ${file(./config/config.${self:custom.currentStage}.json):FIREBASE_AUTH_URI}
+    FIREBASE_TOKEN_URI: ${file(./config/config.${self:custom.currentStage}.json):FIREBASE_TOKEN_URI}
+    FIREBASE_AUTH_PROVIDER_X509_CERT_URL: ${file(./config/config.${self:custom.currentStage}.json):FIREBASE_AUTH_PROVIDER_X509_CERT_URL}
+    FIREBASE_CLIENT_X509_CERT_URL: ${file(./config/config.${self:custom.currentStage}.json):FIREBASE_CLIENT_X509_CERT_URL}
 
   iamRoleStatements:
     - Effect: "Allow"
@@ -66,6 +75,10 @@ functions:
           cors: true
       - http:
           path: /auth_verify
+          method: POST
+          cors: true
+      - http:
+          path: /auth_google
           method: POST
           cors: true
       - http:

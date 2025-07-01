@@ -1,4 +1,5 @@
 const depManager = require("../core/depManager");
+const { initFirebase } = require("../core/firebase");
 const { hash, checkHash } = require("../core/helper");
 const responser = require("../core/responser");
 const { sendSms } = require("../core/utils");
@@ -204,6 +205,45 @@ async function authVerify(req, res) {
   }
 }
 
+async function authGoogle(req, res) {
+  try {
+    initFirebase()
+    const { idToken } = req.body;
+    if (!idToken) return responser.error(res, "AUTH_E001");
+
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const { uid, email, name, picture } = decodedToken;
+
+    let user = await depManager.USER.getUserModel().findOne({ email });
+    
+    if (!user) {
+      user = await depManager.USER.getUserModel().create({
+        firebaseUID: uid,
+        email,
+        loginType: "google",
+        firstName: name,
+        lastName: "",
+        profileImage: picture,
+        roleID: "user"
+      });
+    }
+
+    const token = generateTokens({
+      userID: user._id,
+      roleID: user.roleID
+    });
+
+    const displayName = user.firstName
+      ? `${user.firstName} ${user.lastName ?? ''}`.trim()
+      : null;
+
+    return responser.success(res, { token, displayName, roleID: "user" }, "AUTH_S005");
+  }catch(e){
+    console.log(e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
 
 
 async function onboarding(req, res){
@@ -321,5 +361,6 @@ module.exports = {
   signup,
   authOtp,
   authVerify,
+  authGoogle,
   onboarding
 }
