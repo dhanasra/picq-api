@@ -7,8 +7,7 @@ function initFirebase(){
 
     if(!admin.apps.length){
         firebaseAdmin = admin.initializeApp({
-            credential: cert({
-                "type": "service_account",
+            credential: admin.credential.cert({
                 "project_id": process.env.FIREBASE_PROJECT_ID,
                 "private_key_id": process.env.FIREBASE_PRIVATE_KEY_ID,
                 "private_key": process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
@@ -24,6 +23,8 @@ function initFirebase(){
     }else{
         firebaseAdmin = admin.app
     }
+
+    return firebaseAdmin;
 }
 
 module.exports = {

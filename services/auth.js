@@ -207,12 +207,15 @@ async function authVerify(req, res) {
 
 async function authGoogle(req, res) {
   try {
-    initFirebase()
+    const admin = initFirebase()
     const { idToken } = req.body;
     if (!idToken) return responser.error(res, "AUTH_E001");
 
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     const { uid, email, name, picture } = decodedToken;
+
+    const [firstName, ...rest] = (name || '').trim().split(' ');
+    const lastName = rest.join(' ');
 
     let user = await depManager.USER.getUserModel().findOne({ email });
     
@@ -221,8 +224,8 @@ async function authGoogle(req, res) {
         firebaseUID: uid,
         email,
         loginType: "google",
-        firstName: name,
-        lastName: "",
+        firstName,
+        lastName,
         profileImage: picture,
         roleID: "user"
       });
