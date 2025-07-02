@@ -21,7 +21,7 @@ function initFirebase(){
             })
         });
     }else{
-        firebaseAdmin = admin.app
+        firebaseAdmin = admin.app()
     }
 
     return firebaseAdmin;
