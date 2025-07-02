@@ -95,7 +95,8 @@ async function getNotificationDetails(req, res){
 
 async function updateRead(req, res){
   try{
-    const { id, isRead } = req.query;
+    const { isRead } = req.query;
+    const { id } = req.params;
 
     await depManager.NOTIFICATIONS.getNotificationsModel().updateOne({_id: id}, { isRead: isRead ?? true })
     return responser.success(res, true, "Success");

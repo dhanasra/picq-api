@@ -252,3 +252,26 @@ functions:
           path: /verify_otp
           method: POST
           cors: true
+  notification:
+    handler: ./handlers/notification.handler
+    events:
+      - http:
+          path: /notifications
+          method: GET
+          cors: true
+      - http:
+          path: /notifications/{id}
+          method: GET
+          cors: true
+      - http:
+          path: /notifications/{id}
+          method: DELETE
+          cors: true
+      - http:
+          path: /notifications/{id}/read
+          method: PUT
+          cors: true
+      - http:
+          path: /save-fcm
+          method: POST
+          cors: true

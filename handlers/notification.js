@@ -19,7 +19,7 @@ app.use(validateAccessToken);
 app.post("/save-fcm", processHandler(service.saveFcm));
 app.get("/notifications", processHandler(service.getNotifications));
 app.get("/notifications/:id", processHandler(service.getNotificationDetails));
-app.put("/notifications/read", processHandler(service.updateRead));
+app.put("/notifications/:id/read", processHandler(service.updateRead));
 app.delete("/notifications/:id", processHandler(service.deleteNotification));
 
 module.exports.handler = serverless(app, {
