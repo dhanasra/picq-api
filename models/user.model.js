@@ -128,6 +128,10 @@ const userSchema = new Schema({
       default: null
     }
   },
+  fcmTokens: {
+    type: Object,
+    default: []
+  },
   createdAt: {
     type: Date,
     default: Date.now

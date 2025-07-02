@@ -221,8 +221,8 @@ async function authGoogle(req, res) {
     
     if (!user) {
       user = await depManager.USER.getUserModel().create({
-        firebaseUID: uid,
         email,
+        authId: uid,
         loginType: "google",
         firstName,
         lastName,
