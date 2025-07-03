@@ -65,7 +65,7 @@ const userSchema = new Schema({
   },
   roleID: {
     type: String,
-    enum: ["studio_owner", "print_provider", "vendor_partner", "admin", "user"],
+    enum: ["studio_owner", "user", "admin", "support", "superadmin"],
     default: "user"
   },
   razorpay: {

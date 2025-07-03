@@ -87,6 +87,25 @@ functions:
           path: /onboarding
           method: POST
           cors: true
+  admin:
+    handler: ./handlers/admin.handler
+    events:
+      - http:
+          path: /admins
+          method: POST
+          cors: true
+      - http:
+          path: /admins
+          method: GET
+          cors: true
+      - http:
+          path: /admins/{id}
+          method: PUT
+          cors: true
+      - http:
+          path: /admins/{id}
+          method: DELETE
+          cors: true
   user:
     handler: ./handlers/user.handler
     events:

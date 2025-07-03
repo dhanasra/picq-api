@@ -1,0 +1,12 @@
+{
+  "en": {
+    "ADMIN_S001": "Admin created successfully.",
+    "ADMIN_S002": "Admins fetched successfully.",
+    "ADMIN_S003": "Admin updated successfully.",
+    "ADMIN_S004": "Admin deleted successfully.",
+    "ADMIN_E001": "Invalid admin role.",
+    "ADMIN_E002": "User with same email or phone already exists.",
+    "ADMIN_E003": "Admin not found to update.",
+    "ADMIN_E004": "Admin not found to delete."
+  }
+}

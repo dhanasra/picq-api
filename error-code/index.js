@@ -8,9 +8,11 @@ const BOOKINGS = require("./bookings.json");
 const OTP = require("./otp.json");
 const USER = require("./user.json");
 const COUPON = require("./coupons.json")
+const ADMIN = require("./admin.json")
 
 module.exports = {
     AUTH,
+    ADMIN,
     GLOBAL,
     STUDIO,
     ADDRESS,
