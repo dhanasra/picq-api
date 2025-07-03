@@ -192,6 +192,37 @@ functions:
           path: /bookings/{id}
           method: GET
           cors: true
+  coupons:
+    handler: ./handlers/coupons.handler
+    events:
+      - http:
+          path: /coupons/me
+          method: GET
+          cors: true
+      - http:
+          path: /coupons/applicable
+          method: GET
+          cors: true
+      - http:
+          path: /coupons/{code}
+          method: GET
+          cors: true
+      - http:
+          path: /coupons
+          method: GET
+          cors: true
+      - http:
+          path: /coupons
+          method: POST
+          cors: true
+      - http:
+          path: /coupons/{id}
+          method: PUT
+          cors: true
+      - http:
+          path: /coupons/{id}
+          method: DELETE
+          cors: true
   studio:
     handler: ./handlers/studio.handler
     events:

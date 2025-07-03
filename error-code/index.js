@@ -7,6 +7,7 @@ const DOCUMENTS = require("./documents.json");
 const BOOKINGS = require("./bookings.json");
 const OTP = require("./otp.json");
 const USER = require("./user.json");
+const COUPON = require("./coupons.json")
 
 module.exports = {
     AUTH,
@@ -17,5 +18,6 @@ module.exports = {
     DOCUMENTS,
     BOOKINGS,
     OTP,
-    USER
+    USER,
+    COUPON
 }

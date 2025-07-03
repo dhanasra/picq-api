@@ -7,6 +7,7 @@ const BOOKINGS = require("../models/bookings.model");
 const OTP = require("../models/otp.model");
 const REVIEWS = require("../models/reviews.model");
 const NOTIFICATIONS = require("../models/notification.model");
+const COUPONS = require("../models/coupon.model");
 
 const depManager = {
   USER,
@@ -16,7 +17,8 @@ const depManager = {
   BOOKINGS,
   OTP,
   REVIEWS,
-  NOTIFICATIONS
+  NOTIFICATIONS,
+  COUPONS
 };
 
 module.exports = depManager;

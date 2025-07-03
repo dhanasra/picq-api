@@ -1,0 +1,18 @@
+{
+  "en": {
+    "S001": "Coupon created successfully.",
+    "S002": "Coupons fetched successfully.",
+    "S003": "Coupon details fetched successfully.",
+    "S004": "Coupon is valid.",
+    "S005": "Coupon updated successfully.",
+    "S006": "Coupon deleted successfully.",
+
+    "E001": "Coupon with this code already exists.",
+    "E002": "Coupon not found.",
+    "E003": "Coupon is either not yet active or has expired.",
+    "E004": "Coupon usage limit exceeded.",
+    "E005": "This coupon is only valid for new users.",
+    "E006": "You are not eligible to use this coupon.",
+    "E007": "Failed to update coupon."
+  }
+}
