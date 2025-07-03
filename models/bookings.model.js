@@ -53,6 +53,16 @@ const _bookingsSchema = new Schema({
     required: true, 
     min: 0 
   },
+  coupon: {
+    code: { 
+      type: String, 
+      default: null 
+    },
+    discountAmount: { 
+      type: Number, 
+      default: 0
+    }
+  },
   extras: { 
     type: Object, 
     default: []
