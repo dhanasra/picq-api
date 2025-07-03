@@ -1,6 +1,7 @@
 const depManager = require("../core/depManager");
 const responser = require("../core/responser");
 const { ObjectId } = require("mongodb");
+const { createFundAccount } = require("./razorpay");
 
 async function search(req, res) {
   try {
@@ -434,6 +435,32 @@ async function update(req, res) {
     }
     if(documents){
       studio.documents = documents;
+      
+      const UserModel = depManager.USER.getUserModel();
+      const DocumentModel = depManager.DOCUMENTS.getDocumentsModel();
+
+       await Promise.all([
+        UserModel.findById(studio.owner),
+        DocumentModel.findById(documents)
+      ])
+      .then(async ([user, doc]) => {
+        if (
+          user?.razorpay?.contactId &&
+          !user?.razorpay?.fundAccountId &&
+          doc?.bankInfo
+        ) {
+          try {
+            const fundAccountId = await createFundAccount(user.razorpay.contactId, doc.bankInfo);
+            user.razorpay.fundAccountId = fundAccountId;
+            await user.save();
+          } catch (err) {
+            console.error("Fund account creation failed:", err?.response?.data || err.message);
+          }
+        }
+      })
+      .catch(err => {
+        console.error("Failed to fetch user or documents:", err);
+      });
     }
     if(operationalHours){
       studio.operationalHours = operationalHours;

@@ -25,6 +25,8 @@ provider:
     FIREBASE_TOKEN_URI: ${file(./config/config.${self:custom.currentStage}.json):FIREBASE_TOKEN_URI}
     FIREBASE_AUTH_PROVIDER_X509_CERT_URL: ${file(./config/config.${self:custom.currentStage}.json):FIREBASE_AUTH_PROVIDER_X509_CERT_URL}
     FIREBASE_CLIENT_X509_CERT_URL: ${file(./config/config.${self:custom.currentStage}.json):FIREBASE_CLIENT_X509_CERT_URL}
+    RAZORPAY_KEY_ID: ${file(./config/config.${self:custom.currentStage}.json):RAZORPAY_KEY_ID}
+    RAZORPAY_KEY_SECRET: ${file(./config/config.${self:custom.currentStage}.json):RAZORPAY_KEY_SECRET}
 
   iamRoleStatements:
     - Effect: "Allow"

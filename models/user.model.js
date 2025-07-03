@@ -68,6 +68,10 @@ const userSchema = new Schema({
     enum: ["studio_owner", "print_provider", "vendor_partner", "admin", "user"],
     default: "user"
   },
+  razorpay: {
+    contactId: { type: String, default: null },
+    fundAccountId: { type: String, default: null }
+  },
   registrationStatus: {
     type: String,
     enum: ["pending", "completed", "awaiting_approval", "approved", "paused", "rejected", "invited"],

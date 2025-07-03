@@ -3,6 +3,7 @@ const { initFirebase } = require("../core/firebase");
 const { hash, checkHash } = require("../core/helper");
 const responser = require("../core/responser");
 const { sendSms } = require("../core/utils");
+const { createRazorpayContact, createFundAccount } = require("./razorpay");
 const { generateTokens } = require("./token");
 
 async function signin(req, res){
@@ -73,6 +74,12 @@ async function signup(req, res){
     };
 
     const user = await depManager.USER.getUserModel().create(data);
+
+    const contactId = await createRazorpayContact(user)
+    user.razorpay = {
+      contactId
+    };
+    await user.save();
 
     await depManager.STUDIO.getStudioModel().create({
       studioName: studioName,
@@ -259,10 +266,14 @@ async function onboarding(req, res){
     if(roleID !== "studio_owner"){
       return responser.error(res, null, "AUTH_E003");
     }
+
+    const UserModel = depManager.USER.getUserModel();
+    const DocumentModel = depManager.DOCUMENTS.getDocumentsModel();
+    const StudioModel = depManager.STUDIO.getStudioModel();
     
     const { studioName, email, documents, noOfRooms, rooms, frontDeskPhoneVerified, ownerPhoneNumberVerified, operationalHours, openDays, ownerPhoneNumber, ownerEmail, ownerType, address, frontDeskPhone, minTime, category, services, price, offer, images, about, tc, equipments, facilities, products, status } = req.body;
 
-    const studio = await depManager.STUDIO.getStudioModel().findOne({ owner: userID });
+    const studio = await StudioModel.findOne({ owner: userID });
 
     if(!studio){
       return responser.error(res, null, "AUTH_E004");
@@ -335,6 +346,28 @@ async function onboarding(req, res){
       studio.ownerPhoneNumber = ownerPhoneNumber;
     }
     if(documents){
+
+      await Promise.all([
+        UserModel.findById(userID),
+        DocumentModel.findById(documents)
+      ]).then(async ([user, doc]) => {
+        if (
+          user?.razorpay?.contactId &&
+          !user?.razorpay?.fundAccountId &&
+          doc?.bankInfo
+        ) {
+          try {
+            const fundAccountId = await createFundAccount(user.razorpay.contactId, doc.bankInfo);
+            user.razorpay.fundAccountId = fundAccountId;
+            await user.save();
+          } catch (err) {
+            console.error("Error during fund account creation:", err?.response?.data || err.message);
+          }
+        }
+      }).catch(err => {
+        console.error("Error fetching user/documents:", err);
+      });
+
       studio.documents = documents;
     }
     if(operationalHours){
