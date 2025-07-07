@@ -6,7 +6,7 @@ const app = express();
 
 const processHandler = require("../core/processHandler");
 
-const service = require('../services/payout');
+const service = require('../services/payouts');
 const cors_origin = require("../core/cors_origin");
 const { validateAccessToken } = require("../middlewares/authenticate");
 

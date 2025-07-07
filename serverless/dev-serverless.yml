@@ -212,6 +212,10 @@ functions:
           path: /bookings/{id}
           method: GET
           cors: true
+      - http:
+          path: /bookings/{id}/refund
+          method: POST
+          cors: true
   coupons:
     handler: ./handlers/coupons.handler
     events:
@@ -327,4 +331,15 @@ functions:
       - http:
           path: /save-fcm
           method: POST
+          cors: true
+  payouts:
+    handler: ./handlers/payouts.handler
+    events:
+      - http:
+          path: /payouts/request
+          method: POST
+          cors: true
+      - http:
+          path: /payouts/settle
+          method: PUT
           cors: true
