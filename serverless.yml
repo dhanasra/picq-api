@@ -340,6 +340,10 @@ functions:
     handler: ./handlers/payouts.handler
     events:
       - http:
+          path: /payouts
+          method: GET
+          cors: true
+      - http:
           path: /payouts/request
           method: POST
           cors: true

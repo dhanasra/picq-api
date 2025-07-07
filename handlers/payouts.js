@@ -18,6 +18,7 @@ app.use(cors_origin());
 
 app.use(validateAccessToken);
 
+app.get("/payouts", processHandler(service.listPayouts))
 app.post("/payouts/request", processHandler(service.requestPayout))
 app.put("/payouts/settle", processHandler(service.settlePayout))
 

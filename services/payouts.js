@@ -4,6 +4,54 @@ const responser = require("../core/responser");
 const { getPayoutMonth } = require("../core/utils");
 const { createPayout } = require("./razorpay");
 
+async function listPayouts(req, res) {
+  try {
+    const { userID, roleID } = req;
+
+    const {
+      status,           // 'completed', 'processing', etc.
+      payoutMonth,      // '2025-07'
+      from,             // ISO start date
+      to,               // ISO end date
+      page = 1,
+      limit = 10
+    } = req.query;
+
+    const filters = {};
+
+    // Admin can see all payouts, others only their own
+    if (roleID !== 'admin') {
+      filters.ownerID = userID;
+    }
+
+    if (status) filters.status = status;
+    if (payoutMonth) filters.payoutMonth = payoutMonth;
+
+    if (from || to) {
+      filters.date = {};
+      if (from) filters.date.$gte = new Date(from);
+      if (to) filters.date.$lte = new Date(to);
+    }
+
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+
+    const [data, total] = await Promise.all([
+      depManager.PAYOUTS.getPayoutsModel()
+        .find(filters)
+        .sort({ date: -1 })
+        .skip(skip)
+        .limit(parseInt(limit)),
+      depManager.PAYOUTS.getPayoutsModel().countDocuments(filters)
+    ]);
+
+    return responser.success(res, { data, total }, "PAYOUTS_S001");
+  } catch (err) {
+    console.error("Payout list error:", err);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
+
 async function requestPayout(req, res) {
   try {
     const { userID } = req;
@@ -142,6 +190,7 @@ async function settlePayout(req, res) {
 
 
 module.exports = {
+    listPayouts,
     requestPayout,
     settlePayout
 }
