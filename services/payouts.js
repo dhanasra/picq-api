@@ -35,7 +35,7 @@ async function listPayouts(req, res) {
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
-    const [data, total] = await Promise.all([
+    const [payouts, total] = await Promise.all([
       depManager.PAYOUTS.getPayoutsModel()
         .find(filters)
         .sort({ date: -1 })
@@ -44,7 +44,7 @@ async function listPayouts(req, res) {
       depManager.PAYOUTS.getPayoutsModel().countDocuments(filters)
     ]);
 
-    return responser.success(res, { data, total }, "PAYOUTS_S001");
+    return responser.success(res, { payouts, total }, "PAYOUTS_S001");
   } catch (err) {
     console.error("Payout list error:", err);
     return responser.error(res, "GLOBAL_E001");
