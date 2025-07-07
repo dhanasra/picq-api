@@ -28,8 +28,8 @@ const _payoutSchema = new Schema({
     },
     status: { 
         type: String, 
-        enum: ['processing', 'completed', 'failed'],
-        default: 'processing' 
+        enum: ['requested', 'processing', 'completed', 'failed'],
+        default: 'requested' 
     },
     payoutMonth: { 
         type: String, 

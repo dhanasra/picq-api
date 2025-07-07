@@ -64,7 +64,7 @@ async function requestPayout(req, res) {
     const existing = await depManager.PAYOUTS.getPayoutsModel().findOne({
       ownerID: userID,
       payoutMonth: monthKey,
-      status: { $in: ['processing', 'completed'] }
+      status: { $in: ['requested', 'processing', 'completed'] }
     });
     if (existing) return responser.error(res, 'PAYOUT_ALREADY_REQUESTED');
 
