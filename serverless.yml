@@ -216,6 +216,10 @@ functions:
           path: /bookings/{id}/refund
           method: POST
           cors: true
+      - http:
+          path: /bookings/{id}/cancel
+          method: POST
+          cors: true
   coupons:
     handler: ./handlers/coupons.handler
     events:

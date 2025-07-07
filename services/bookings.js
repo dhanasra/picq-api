@@ -337,6 +337,69 @@ async function create(req, res) {
   }
 }
 
+async function cancelBooking(req, res) {
+  try {
+    const { id } = req.params;
+    const { roleID, userID } = req;
+    const { reason } = req.body;
+
+    const booking = await depManager.BOOKINGS.getBookingsModel().findById(id);
+    if (!booking) return responser.error(res, "BOOKING_NOT_FOUND");
+
+    if (["completed", "cancelled"].includes(booking.status)) {
+      return responser.error(res, "BOOKING_ALREADY_FINALIZED");
+    }
+
+    let cancelledBy = "user";
+    if (roleID === "admin") cancelledBy = "admin";
+    else if (String(booking.userID) !== userID) cancelledBy = "owner";
+
+    // Refund logic: only if booking has a completed payment
+    const paid = booking.paymentDetails?.status === "completed";
+    const transactionID = booking.paymentDetails?.transactionID;
+
+    if (paid && transactionID) {
+      const refundAmount = booking.paymentDetails.partialPayment || booking.total;
+      const refundAmountInPaise = refundAmount * 100;
+
+      try {
+        const refundRes = await refundPayment({
+          paymentId: transactionID,
+          amount: refundAmountInPaise
+        });
+
+        booking.paymentDetails.refund = {
+          status: 'processed',
+          refundId: refundRes.data.id,
+          amount: refundAmount,
+          refundedAt: new Date()
+        };
+      } catch (err) {
+        booking.paymentDetails.refund = {
+          status: 'failed',
+          refundId: null,
+          amount: 0,
+          refundedAt: null,
+          failureReason: err.message
+        };
+      }
+    }
+
+    booking.status = "cancelled";
+    booking.cancellationReason = reason || null;
+    booking.cancelledBy = cancelledBy;
+    booking.updatedAt = new Date();
+
+    await booking.save();
+
+    return responser.success(res, booking, "BOOKING_CANCELLED");
+  } catch (e) {
+    console.error("Cancel booking error:", e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
+
 async function refundBooking(req, res) {
   try{
     const { id } = req.params;
@@ -381,5 +444,6 @@ module.exports = {
   paginate ,
   getBooking,
   create,
+  cancelBooking,
   refundBooking
 };
