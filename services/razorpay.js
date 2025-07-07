@@ -41,17 +41,17 @@ async function createFundAccount(contactId, bankInfo) {
   return response.data.id;
 }
 
-async function createPayout({ accountNumber, fundAccountId, amount, currency = "INR", purpose = "payout", narration = "Studio Owner Payout", referenceId }) {
+async function createPayout({ fundAccountId, amount, currency = "INR", purpose = "payout", narration = "Studio Owner Payout", referenceId }) {
   return axios
     .post("https://api.razorpay.com/v1/payouts", {
-      account_number: accountNumber, // Virtual Account Number provided by Razorpay
+      account_number: process.env.RAZORPAY_ACCOUNT_NUMBER,
       fund_account_id: fundAccountId,
-      amount: amount * 100, // Convert ₹100 to 10000 paisa
+      amount: amount * 100,
       currency,
-      mode: "IMPS", // or UPI, NEFT
+      mode: "IMPS",
       purpose,
       narration,
-      reference_id: referenceId, // your internal txn ID
+      reference_id: referenceId
     }, {
       auth: razorpayAuth
     })

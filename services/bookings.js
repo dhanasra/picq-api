@@ -1,6 +1,7 @@
 const depManager = require("../core/depManager");
 const responser = require("../core/responser");
 const { ObjectId } = require("mongodb");
+const { getPayoutMonth } = require("../core/utils");
 
 async function createOffline(req, res) {
   try {
@@ -292,6 +293,9 @@ async function create(req, res) {
       notes,
     } = req.body;
 
+    const platformFee  = Math.round(total * 0.25);
+    const payoutAmount = total - platformFee;
+
     // Prepare booking data
     const bookingData = {
       userID,
@@ -309,6 +313,12 @@ async function create(req, res) {
         status: paymentStatus,
         paymentMethod: paymentMethod,
         partialPayment: partialPayment
+      },
+      payout: {
+        status: "pending",
+        payoutAmount,
+        platformFee,
+        payoutMonth: getPayoutMonth(new Date())
       },
       notes,
       createdAt: Date.now(),

@@ -92,6 +92,39 @@ const _bookingsSchema = new Schema({
       default: null
     },
   },
+  payout: {
+    status: {
+      type: String,
+      enum: ['pending', 'processing', 'completed', 'failed'],
+      default: 'pending'
+    },
+    payoutAmount: {
+      type: Number,
+      default: 0,
+      min: 0
+    },
+    platformFee: {
+      type: Number,
+      default: 0,
+      min: 0
+    },
+    fundAccountId: {
+      type: String,
+      default: null
+    },
+    transactionId: { 
+      type: String,
+      default: null
+    },
+    payoutMonth: {
+      type: String,
+      default: null
+    },
+    failureReason: {
+      type: String,
+      default: null
+    }
+  },
   notes: { 
     type: String,
     default: null 
