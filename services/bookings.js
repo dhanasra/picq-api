@@ -2,6 +2,7 @@ const depManager = require("../core/depManager");
 const responser = require("../core/responser");
 const { ObjectId } = require("mongodb");
 const { getPayoutMonth } = require("../core/utils");
+const { refundPayment } = require("./razorpay");
 
 async function createOffline(req, res) {
   try {
@@ -336,10 +337,49 @@ async function create(req, res) {
   }
 }
 
+async function refundBooking(req, res) {
+  try{
+    const { id } = req.params;
+
+    const booking = await depManager.BOOKINGS.getBookingsModel().findById(id);
+    if (!booking) return responser.error(res, "BOOKING_NOT_FOUND");
+
+    if (booking.status !== 'cancelled')
+      return responser.error(res, "BOOKING_NOT_CANCELLED");
+
+    if (booking.paymentDetails?.refund?.status === 'processed') {
+      return responser.error(res, "REFUND_ALREADY_PROCESSED");
+    }
+  
+    const paymentId = booking.paymentDetails.transactionID;
+    if (!paymentId)
+      return responser.error(res, "NO_PAYMENT_FOUND");
+
+    const refundAmount = booking.paymentDetails.partialPayment || booking.total;
+    const refundAmountInPaise = refundAmount * 100;
+
+    const refundRes = await refundPayment({ paymentId, amount: refundAmountInPaise })
+
+    booking.paymentDetails.refund = {
+      status: 'processed',
+      refundId: refundRes.data.id,
+      amount: refundAmount,
+      refundedAt: new Date()
+    };
+
+    await booking.save();
+
+    return responser.success(res, booking, "REFUND_SUCCESS");
+  }catch(e){
+    return responser.error(res, "REFUND_FAILED");
+  }
+}
+
 module.exports = { 
   createOffline,
   updateOffline,
   paginate ,
   getBooking,
-  create
+  create,
+  refundBooking
 };

@@ -62,8 +62,17 @@ async function createPayout({ fundAccountId, amount, currency = "INR", purpose =
     });
 }
 
+async function refundPayment({ paymentId, amount }) {
+  return await axios.post(
+      `https://api.razorpay.com/v1/payments/${paymentId}/refund`,
+      { amount },
+      { auth: razorpayAuth }
+    );
+}
+
 module.exports = { 
     createPayout,
     createRazorpayContact,
-    createFundAccount
+    createFundAccount,
+    refundPayment
 };

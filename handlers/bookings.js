@@ -24,6 +24,7 @@ app.get("/bookings/:id", processHandler(service.getBooking));
 app.get("/bookings", processHandler(service.paginate));
 
 app.post("/bookings", processHandler(service.create))
+app.post("/bookings/:id/refund", processHandler(service.refundBooking));
 
 module.exports.handler = serverless(app, {
     callbackWaitsForEmptyEventLoop: false

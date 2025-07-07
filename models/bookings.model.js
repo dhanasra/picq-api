@@ -91,6 +91,16 @@ const _bookingsSchema = new Schema({
       type: Date,
       default: null
     },
+    refund: {
+      status: {
+        type: String,
+        enum: ['pending', 'processed', 'failed'],
+        default: 'pending'
+      },
+      refundId: { type: String, default: null },
+      amount: { type: Number, default: 0 },
+      refundedAt: { type: Date, default: null }
+    }
   },
   payout: {
     status: {
