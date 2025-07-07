@@ -19,7 +19,7 @@ app.post("/coupons", processHandler(service.create));
 app.get("/coupons", processHandler(service.list));
 app.get("/coupons/me", processHandler(service.getMyCoupons));
 app.get("/coupons/applicable", processHandler(service.getApplicableCoupons));
-app.get("/coupons/:code", processHandler(service.getByCode));
+app.get("/coupons/code/:code", processHandler(service.getByCode));
 app.put("/coupons/:id", processHandler(service.update));
 app.delete("/coupons/:id", processHandler(service.remove));
 
