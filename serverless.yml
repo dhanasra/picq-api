@@ -210,6 +210,10 @@ functions:
           cors: true
       - http:
           path: /bookings/{id}
+          method: PUT
+          cors: true
+      - http:
+          path: /bookings/{id}
           method: GET
           cors: true
       - http:

@@ -78,7 +78,7 @@ async function createOffline(req, res) {
   }
 }
 
-async function updateOffline(req, res) {
+async function updateBooking(req, res) {
   try {
 
     const bookingID = req.params.id;
@@ -89,6 +89,7 @@ async function updateOffline(req, res) {
       duration,
       amount,
       room,
+      status,
       service,
       category,
       paymentMethod,
@@ -105,6 +106,9 @@ async function updateOffline(req, res) {
 
     if(dateTime){
       booking.dateTime = dateTime;
+    }
+    if(status){
+      booking.status = status;
     }
     if(endDateTime){
       booking.endDateTime = endDateTime;
@@ -446,7 +450,7 @@ async function refundBooking(req, res) {
 
 module.exports = { 
   createOffline,
-  updateOffline,
+  updateBooking,
   paginate ,
   getBooking,
   create,

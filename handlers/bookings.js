@@ -19,11 +19,12 @@ app.use(cors_origin());
 app.use(validateAccessToken);
 
 app.post("/bookings/offline", processHandler(service.createOffline))
-app.put("/bookings/offline/:id", processHandler(service.updateOffline))
+app.put("/bookings/offline/:id", processHandler(service.updateBooking))
 app.get("/bookings/:id", processHandler(service.getBooking));
 app.get("/bookings", processHandler(service.paginate));
 
 app.post("/bookings", processHandler(service.create))
+app.put("/bookings/:id", processHandler(service.updateBooking))
 app.post("/bookings/:id/refund", processHandler(service.refundBooking));
 app.post("/bookings/:id/cancel", processHandler(service.cancelBooking));
 
