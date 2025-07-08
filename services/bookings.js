@@ -292,6 +292,9 @@ async function create(req, res) {
       paymentStatus,
       partialPayment,
       notes,
+      paymentDate,
+      orderID,
+      transactionID
     } = req.body;
 
     const platformFee  = Math.round(total * 0.25);
@@ -313,7 +316,10 @@ async function create(req, res) {
       paymentDetails: {
         status: paymentStatus,
         paymentMethod: paymentMethod,
-        partialPayment: partialPayment
+        partialPayment: partialPayment,
+        transactionID: transactionID,
+        orderID: orderID,
+        paymentDate: paymentDate
       },
       payout: {
         status: "pending",

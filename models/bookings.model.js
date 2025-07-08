@@ -87,6 +87,10 @@ const _bookingsSchema = new Schema({
       type: String,
       default: null
     },
+    orderID: { 
+      type: String,
+      default: null
+    },
     paymentDate: { 
       type: Date,
       default: null
