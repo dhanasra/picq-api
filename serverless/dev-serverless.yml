@@ -193,6 +193,10 @@ functions:
     handler: ./handlers/bookings.handler
     events:
       - http:
+          path: /bookings/order
+          method: POST
+          cors: true
+      - http:
           path: /bookings
           method: POST
           cors: true

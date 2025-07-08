@@ -2,7 +2,7 @@ const depManager = require("../core/depManager");
 const responser = require("../core/responser");
 const { ObjectId } = require("mongodb");
 const { getPayoutMonth } = require("../core/utils");
-const { refundPayment } = require("./razorpay");
+const { refundPayment, createRazorpayOrder } = require("./razorpay");
 
 async function createOffline(req, res) {
   try {
@@ -277,6 +277,24 @@ async function getBooking(req, res) {
 }
 
 
+async function createOrderId(req, res) {
+  try {
+    const userID = req.userID;
+    const { amount, studioID } = req.body
+
+    const order = await createRazorpayOrder({
+      amount: amount,
+      receipt: `rcpt_${Date.now()}`,
+      notes: { studioID, userID }
+    });
+
+    return responser.success(res, {orderId: order.id}, "BOOKINGS_S001");
+  } catch (e) {
+    console.error("Error in createOffline:", e);
+    return responser.error(res, "GLOBAL_E001");
+  }
+}
+
 async function create(req, res) {
   try {
 
@@ -356,9 +374,9 @@ async function cancelBooking(req, res) {
     const booking = await depManager.BOOKINGS.getBookingsModel().findById(id);
     if (!booking) return responser.error(res, "BOOKING_NOT_FOUND");
 
-    if (["completed", "cancelled"].includes(booking.status)) {
-      return responser.error(res, "BOOKING_ALREADY_FINALIZED");
-    }
+    // if (["completed", "cancelled"].includes(booking.status)) {
+    //   return responser.error(res, "BOOKING_ALREADY_FINALIZED");
+    // }
 
     let cancelledBy = "user";
     if (roleID === "admin") cancelledBy = "admin";
@@ -371,6 +389,8 @@ async function cancelBooking(req, res) {
     if (paid && transactionID) {
       const refundAmount = booking.paymentDetails.partialPayment || booking.total;
       const refundAmountInPaise = refundAmount * 100;
+
+      console.log(refundAmount);
 
       try {
         const refundRes = await refundPayment({
@@ -385,6 +405,7 @@ async function cancelBooking(req, res) {
           refundedAt: new Date()
         };
       } catch (err) {
+        console.log(err?.response?.data);
         booking.paymentDetails.refund = {
           status: 'failed',
           refundId: null,
@@ -454,6 +475,7 @@ module.exports = {
   paginate ,
   getBooking,
   create,
+  createOrderId,
   cancelBooking,
   refundBooking
 };

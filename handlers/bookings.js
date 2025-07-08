@@ -23,6 +23,7 @@ app.put("/bookings/offline/:id", processHandler(service.updateBooking))
 app.get("/bookings/:id", processHandler(service.getBooking));
 app.get("/bookings", processHandler(service.paginate));
 
+app.post("/bookings/order", processHandler(service.createOrderId))
 app.post("/bookings", processHandler(service.create))
 app.put("/bookings/:id", processHandler(service.updateBooking))
 app.post("/bookings/:id/refund", processHandler(service.refundBooking));

@@ -46,7 +46,7 @@ async function createPayout({ fundAccountId, amount, currency = "INR", purpose =
     .post("https://api.razorpay.com/v1/payouts", {
       account_number: process.env.RAZORPAY_ACCOUNT_NUMBER,
       fund_account_id: fundAccountId,
-      amount: amount,
+      amount: amount * 100,
       currency,
       mode: "IMPS",
       purpose,
@@ -62,10 +62,30 @@ async function createPayout({ fundAccountId, amount, currency = "INR", purpose =
     });
 }
 
+async function createRazorpayOrder({ amount, currency = "INR", receipt, payment_capture = 1, notes = {} }) {
+  try {
+    const response = await axios.post(
+      "https://api.razorpay.com/v1/orders",
+      {
+        amount: Math.round(amount * 100),
+        currency,
+        receipt,
+        payment_capture,
+        notes
+      },
+      { auth: razorpayAuth }
+    );
+    return response.data;
+  } catch (err) {
+    console.error("Failed to create Razorpay order:", err?.response?.data || err.message);
+    throw err;
+  }
+}
+
 async function refundPayment({ paymentId, amount }) {
   return await axios.post(
       `https://api.razorpay.com/v1/payments/${paymentId}/refund`,
-      { amount },
+      { amount: Math.round(amount) },
       { auth: razorpayAuth }
     );
 }
@@ -74,5 +94,6 @@ module.exports = {
     createPayout,
     createRazorpayContact,
     createFundAccount,
-    refundPayment
+    createRazorpayOrder,
+    refundPayment,
 };
