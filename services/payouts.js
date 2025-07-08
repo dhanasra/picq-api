@@ -182,7 +182,7 @@ async function settlePayout(req, res) {
     return responser.success(res, payout, "PAYOUT_SETTLED");
     
   }catch(e){
-    console.error("Payout request error:", err);
+    console.error("Payout request error:", e);
     return responser.error(res, "GLOBAL_E001");
   }
 }

@@ -46,7 +46,7 @@ async function createPayout({ fundAccountId, amount, currency = "INR", purpose =
     .post("https://api.razorpay.com/v1/payouts", {
       account_number: process.env.RAZORPAY_ACCOUNT_NUMBER,
       fund_account_id: fundAccountId,
-      amount: amount * 100,
+      amount: amount,
       currency,
       mode: "IMPS",
       purpose,
