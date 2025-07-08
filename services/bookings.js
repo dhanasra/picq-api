@@ -374,9 +374,9 @@ async function cancelBooking(req, res) {
     const booking = await depManager.BOOKINGS.getBookingsModel().findById(id);
     if (!booking) return responser.error(res, "BOOKING_NOT_FOUND");
 
-    // if (["completed", "cancelled"].includes(booking.status)) {
-    //   return responser.error(res, "BOOKING_ALREADY_FINALIZED");
-    // }
+    if (["completed", "cancelled"].includes(booking.status)) {
+      return responser.error(res, "BOOKING_ALREADY_FINALIZED");
+    }
 
     let cancelledBy = "user";
     if (roleID === "admin") cancelledBy = "admin";
