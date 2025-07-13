@@ -112,8 +112,8 @@ async function getApplicableCoupons(req, res) {
       validFrom: { $lte: now },
       validTill: { $gte: now },
       $or: [
-        { minAmount: { $exists: false } },
-        { minAmount: { $lte: totalAmount } }
+        { minBookingAmount: { $exists: false } },
+        { minBookingAmount: { $lte: totalAmount } }
       ]
     }).lean();
 

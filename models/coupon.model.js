@@ -46,7 +46,7 @@ const _couponSchema = new Schema({
     },
     target: {
         type: String,
-        enum: ['all', 'new_users', 'specific_users'],
+        enum: ['all', 'new_users', 'specific_users', 'prime'],
         default: 'all',
     },
     allowedUsers: [
