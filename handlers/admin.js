@@ -1,10 +1,20 @@
 const express = require("express");
-const router = express.Router();
 const processHandler = require("../core/processHandler");
+const bodyParser = require('body-parser');
+const serverless = require("serverless-http");
 const { validateAccessToken } = require("../middlewares/authenticate");
-const service = require("../services/admin"); // You’ll define admin services here
+const service = require("../services/admin");
+const cors_origin = require("../core/cors_origin");
 
-// Middleware to restrict access to superadmins only
+
+const app = express();
+
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
+app.use(bodyParser.json());
+app.use(cors_origin());
+
 function allowRoles(...roles) {
   return (req, res, next) => {
     if (!roles.includes(req.roleID)) {
@@ -14,12 +24,14 @@ function allowRoles(...roles) {
   };
 }
 
-router.use(validateAccessToken);
+app.use(validateAccessToken);
 
 // Only superadmin can manage admins
-router.post("/admins", allowRoles("superadmin"), processHandler(service.createAdmin));
-router.get("/admins", allowRoles("superadmin"), processHandler(service.listAdmins));
-router.put("/admins/:id", allowRoles("superadmin"), processHandler(service.updateAdmin));
-router.delete("/admins/:id", allowRoles("superadmin"), processHandler(service.deleteAdmin));
+app.post("/admins", allowRoles("admin"), processHandler(service.createAdmin));
+app.get("/admins", allowRoles("admin"), processHandler(service.listAdmins));
+app.put("/admins/:id", allowRoles("admin"), processHandler(service.updateAdmin));
+app.delete("/admins/:id", allowRoles("admin"), processHandler(service.deleteAdmin));
 
-module.exports = router;
+module.exports.handler = serverless(app, {
+    callbackWaitsForEmptyEventLoop: false
+});

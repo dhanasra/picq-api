@@ -1,4 +1,5 @@
-const depManager = require("../dependencies");
+const depManager = require("../core/depManager");
+const responser = require("../core/responser");
 
 async function createAdmin(req, res) {
   const UserModel = depManager.USER.getUserModel();
