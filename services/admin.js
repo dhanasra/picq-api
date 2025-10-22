@@ -1,30 +1,39 @@
 const depManager = require("../core/depManager");
 const responser = require("../core/responser");
+const { hash } = require("../core/helper");
 
 async function createAdmin(req, res) {
-  const UserModel = depManager.USER.getUserModel();
-  const { firstName, lastName, email, phoneNumber, password, roleID } = req.body;
+  try{
+    const UserModel = depManager.USER.getUserModel();
+    const { firstName, lastName, email, phoneNumber, password, roleID } = req.body;
 
-  if (!["admin", "support"].includes(roleID)) {
-    return responser.error(res, null, "ADMIN_E001");
+    if (!["admin", "support"].includes(roleID)) {
+      
+      return responser.error(res, null, "ADMIN_E001");
+    }
+
+
+    const exists = await UserModel.findOne({ $or: [{ email }, { phoneNumber }] });
+
+    if (exists) return responser.error(res, "Already an admin with given email or phone number exists", "ADMIN_E002")
+
+    const { hashed, salt } = await hash(password);
+
+    const user = await UserModel.create({
+      firstName,
+      lastName,
+      email,
+      phoneNumber,
+      roleID,
+      password: { hashed, salt },
+      registrationStatus: "approved",
+    });
+
+    return responser.success(res, user, "ADMIN_S001");
+  }catch(e){
+    console.log(e);
+    return responser.error(res, e.message, "ADMIN_E999");
   }
-
-  const exists = await UserModel.findOne({ $or: [{ email }, { phoneNumber }] });
-  if (exists) return responser.error(res, null, "ADMIN_E002");
-
-  const { hashed, salt } = await hash(password);
-
-  const user = await UserModel.create({
-    firstName,
-    lastName,
-    email,
-    phoneNumber,
-    roleID,
-    password: { hashed, salt },
-    registrationStatus: "approved",
-  });
-
-  return responser.success(res, user, "ADMIN_S001");
 }
 
 async function listAdmins(req, res) {
